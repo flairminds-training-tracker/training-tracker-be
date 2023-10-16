@@ -2,10 +2,10 @@ const con  = require('../db_config/db_connection.js')
 const queries = [
   `CREATE TABLE IF NOT EXISTS user (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
-    user_name VARCHAR(255) NOT NULL UNIQUE,
+    user_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    is_admin BOOLEAN NOT NULL,
+    is_admin BOOLEAN NOT NULL DEFAULT 0 ,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
   
@@ -93,14 +93,14 @@ try {
     console.error(error);
   }
 }
-const executeQuery = (query,params) => {
+const executeQuery = (query,params = []) => {
   return new Promise((resolve, reject) => {
     con.query(query, params, (error, result) => {
       if (error) {
         console.log("The error is-",error);
         reject(error);
       } else {
-        // console.log(result);
+        console.log(result);
         resolve(result);
       }
     });
