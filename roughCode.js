@@ -193,3 +193,62 @@ WHERE
 //   "password_confirmation" : "Omkar@123" , 
 //   "new_password" : "Punit@Flairminds"
 // }
+
+const changePassword = async (email, currentPassword, newPassword) => {
+  try {
+    const query = 'SELECT password FROM users WHERE email = ?';
+    const results = await executeQuery(query, [userId]);
+
+    if (results.length === 0) {
+      return { status: 'Error', message: 'User not found' };
+    }
+
+    // Check if the provided current password matches the stored hash
+    const isMatch = await bcrypt.compare(currentPassword, results[0].password);
+    if (!isMatch) {
+      return { status: 'Error', message: 'Current password is incorrect' };
+    }
+
+    // Hash the new password
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(newPassword, salt);
+
+    // Update the password in the database
+    const updateQuery = 'UPDATE users SET password = ? WHERE id = ?';
+    await executeQuery(updateQuery, [hashPassword, userId]);
+
+    return { status: 'Success', message: 'Password updated successfully' };
+  } catch (error) {
+    console.error('Error in changing password:', error);
+    return { status: 'Error', message: 'Error in changing password' };
+  }
+};
+
+const userRegistration = async (req, res) => {
+  const { user_name, email, password, is_admin } = req.body;
+
+  if (!(user_name && email && password && is_admin)) {
+      return res.send("All fields are necessary...");
+  }
+  try {
+      const salt = await bcrypt.genSalt(10);
+      const hashPassword = await bcrypt.hash(password, salt);
+      const userExist = await userExists(email); 
+      if (userExist.length > 0) {
+          return res.status(400).json({ error: "Email already exists. Choose a different email address or login with the same address." });
+      }
+      const now = new Date();
+      const results = await addUserQuery(user_name, email, hashPassword, is_admin , now);
+      if(results.length == 0){
+          return res.status(400).json({ error: "Something wrong in your code" });
+          }
+          var token = jwt.sign({ email: email }, process.env.JWT_SECRET_KEY, {
+              expiresIn: "5d",
+          });
+          res.send(`User created successfully with email - ${email} and has ${token}`);
+          console.log(`User created successfully with email - ${email} and has ${token}`);
+      } catch (error) {
+          res.send("Unable to register");
+          console.error(error); // Use console.error for logging errors
+      }
+};

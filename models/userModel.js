@@ -12,10 +12,11 @@ const userExists = (email)=>{
     return executeQuery(query , params);
 }
 
-const updatePassword = async (newPasswordHash) =>{
+const updatePassword = async (newPasswordHash , email) =>{
     try {
-        const query = 'UPDATE user SET password = ?';
-        return executeQuery(query , [newPasswordHash]);
+        const query = 'UPDATE user SET password = ? WHERE email = ?';
+        const params = [newPasswordHash, email];
+        return executeQuery(query,params);
     } catch (error) {
         console.error('Error in updateUserPasswordByEmail:', error);
         throw error;

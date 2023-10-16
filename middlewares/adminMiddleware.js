@@ -1,33 +1,34 @@
 const { executeQuery } = require("../db_config/db_schema");
+const jwt = require('jsonwebtoken')
 
 const checkUserAuth = async (req, res, next) => {
-    let token;    
-    if (user && user.is_admin) { 
-        const { authorization } = req.headers;
-        if (authorization == null) {
-            return res.status(401).send({ "status": "failed", "message": "Unauthorized User, No Token" });
-        }
-        if (authorization && authorization.startsWith('Bearer')) {
-            try {
-                // Get Token from header
-                token = authorization.split(' ')[1];
-                // Verify Token
-                const email = jwt.verify(token, process.env.JWT_SECRET_KEY);
-                const selectQuery = `SELECT * FROM User WHERE is_admin = 1 AND email = ? `;
-                const user = await executeQuery(selectQuery ,email);
-                console.log("a", email);
+  const { authorization } = req.headers;
+  let token;
+
+  if (authorization == null) {
+      return res.status(401).send({ "status": "failed", "message": "Unauthorized User, No Token" });
+  }
+  token = authorization.split(' ')[1];
+
+  try {
+      const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      const email = decodedToken.email;
+      console.log("Email:", email);
+
+      const selectQuery = `SELECT * FROM User WHERE is_admin = 1 AND email = ? `;
+      const user = req.user = await executeQuery(selectQuery, email);
+
+      if (user && user.is_admin !==0) {
+          console.log("The email is --", email);
           next();
-        } catch (error) {
-          console.log(error.message);
-          res.status(401).send({ "status": "failed", "message": "Unauthorized User" });
-        }
-      } else if (!token) {
-        res.status(401).send({ "status": "failed", "message": "Unauthorized User, No Token" });
+      } else {
+          res.status(401).send({ "status": "failed", "message": "You cannot change password since you don't have admin rights " });
       }
-    } else {
-      res.status(401).send({ "status": "failed", "message": "You don't have admin rights, No Token can be given" });
-    }
-  };
-  
+  } catch (error) {
+      console.error('Error verifying token:', error);
+      res.status(401).send({ "status": "failed", "message": "Unauthorized User" });
+  }
+};
+
   
 module.exports = {checkUserAuth};
