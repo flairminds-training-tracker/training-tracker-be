@@ -31,6 +31,7 @@ const rollbackTransaction = (error) => {
     });
 };
 
+// After getting the data with the help of get activities button , store all the data into the table using the store button
 const assignTechnologyQuery = async (trainee_trainer_tech_table, training_plan_table) => {
     try {
         await beginTransaction();
@@ -58,20 +59,12 @@ const assignTechnologyQuery = async (trainee_trainer_tech_table, training_plan_t
         return "Data inserted successfully into both tables.";
     } catch (error) {
         console.error("Error in assignTechnologyQuery:", error);
-        await rollbackTransaction(error); // Ensure rollback on any error
-        throw error; // Re-throw error for higher level handling
+        await rollbackTransaction(error); 
+        throw error; 
     }
 };
 
-// const getActivitiesQuery = async()=>{
-//     const selectQuery = ``;
-//     const trainee_trainer_tech_results = await executeQuery(selectQuery);
-//     if (trainee_trainer_tech_results.error) {
-//         await rollbackTransaction(trainee_trainer_tech_results.error);
-//         throw trainee_trainer_tech_results.error; 
-//     }
-// }
-
+// Get technologies dropdown
 const getTechnology = () =>{
     const query = `SELECT tech_id , technology FROM technologies_master`
     return executeQuery(query);

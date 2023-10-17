@@ -3,7 +3,6 @@ const {getTrainee } = require('../models/traineeModel.js');
 const getTraineeController = async(req , res) =>{
     try {
         const results = await getTrainee();
-        console.log(results)
         return res.send(results);
     } catch (error) {
         console.error("Error in get Trainee controller..:", error);

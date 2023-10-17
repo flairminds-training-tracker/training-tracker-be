@@ -10,12 +10,8 @@ const { activitiesRouter } = require("./routes/activitiesRouter.js");
 const {traineeRouter}  = require('./routes/traineeRouter.js');
 const port = process.env.PORT || 9000;
 
-app.use(express.json());
-// const corsOptions = {
-//   origin: 'http://localhost:9090',
-// };
 app.use(cors());
-// app.use(cors('*'));
+app.use(express.json());
 
 app.use("/user", userRouter);
 app.use("/tech", technologyRouter);
