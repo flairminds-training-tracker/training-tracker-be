@@ -1,5 +1,5 @@
 const { assignTechnologyQuery , getTechnology } = require('../models/technologiesModel.js');
-
+     
 const assignTechnology = async (req, res) => {
         return new Promise(async (resolve , reject) =>{
             try {
