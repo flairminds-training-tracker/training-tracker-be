@@ -1,12 +1,12 @@
 const { executeQuery } = require("../db_config/db_schema.js");
 
-const assignDueDateQuery = async (activity_data) => {
+const assignDueDateQuery = async (due_date , activity_id) => {
     try {
         const updateQuery = `UPDATE training_plan tp
                              JOIN activities_master am ON tp.activity_id = am.activity_id
                              SET tp.due_date = ?
                              WHERE tp.activity_id = ?`;
-        return executeQuery(updateQuery, activity_data);      
+        return executeQuery(updateQuery, due_date ,activity_id );      
     } catch (error) {
         console.error("Error in assignDueDateQuery:", error);
         throw error;
@@ -18,7 +18,7 @@ const markActivitiesQuery = async (activity_id) => {
         const updateQuery = `
             UPDATE training_plan tp
             JOIN activities_master am ON tp.activity_id = am.activity_id
-            SET tp.required = true
+            SET tp.required = false
             WHERE tp.activity_id = ?`;
         return executeQuery(updateQuery, activity_id);
     } catch (error) {
@@ -53,12 +53,12 @@ const completionPercentage = async(trainee_id)=>{
         throw error;
     }
 }
-const setActivitiesQuery = async (activity_id) => {
+const setActivitiesRequiredQuery = async (activity_id) => {
     try {
         const selectQuery = `
             UPDATE training_plan tp
             JOIN activities_master am ON tp.activity_id = am.activity_id
-            SET tp.required = true
+            SET tp.required = false
             WHERE tp.activity_id = ?`;
         return executeQuery(selectQuery, activity_id);
     } catch (error) {
@@ -66,7 +66,7 @@ const setActivitiesQuery = async (activity_id) => {
         throw error;
     }
 }
-const getActivitiesQuery = async()=>{
+const getActivitiesByTechnologyQuery = async()=>{
     const selectQuery = `SELECT
     ttt.trainee_id AS trainee_id,
     ttt.trainer_id AS trainer_id,
@@ -88,12 +88,10 @@ const getActivitiesQuery = async()=>{
   ttt.tech_id = 1
 `;
     return executeQuery(selectQuery);
-    // console.log(trainee_trainer_tech_results);
-    // if (trainee_trainer_tech_results.error) {
-    //     console.log(trainee_trainer_tech_results.error);
-    //     throw trainee_trainer_tech_results.error; 
-    // }
-    // return res.json(trainee_trainer_tech_results);
 }
+// Check if all activities are already added
 
-module.exports = { assignDueDateQuery , markActivitiesQuery , completionPercentage , getActivitiesQuery}
+
+
+
+module.exports = { assignDueDateQuery , markActivitiesQuery , completionPercentage , getActivitiesByTechnologyQuery , setActivitiesRequiredQuery}

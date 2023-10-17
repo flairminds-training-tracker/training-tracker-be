@@ -1,9 +1,12 @@
-const { assignDueDateQuery  , markActivitiesQuery ,completionPercentage, getActivitiesQuery } = require("../models/activitiesModel.js");
+const { assignDueDateQuery  , markActivitiesQuery ,completionPercentage, getActivitiesQuery , setActivitiesRequiredQuery } = require("../models/activitiesModel.js");
+
+
+
 const assignDueDateController = async (req, res) => {
     try {
         const {due_date , activity_id} = req.body
         const activitiesData = [due_date , activity_id]  
-        const activities = await assignDueDateQuery(activitiesData);        
+        const activities = await assignDueDateQuery([due_date , activity_id]);        
         console.log(activities);
         res.json(activities);
     } catch (error) {
@@ -22,6 +25,8 @@ const markActivitiesController = async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 }
+
+// 
 const completionPercentageController = async(req , res)=>{
     try {
         const {trainee_id} = req.params ;
@@ -37,7 +42,6 @@ const completionPercentageController = async(req , res)=>{
 const getActivitiesController = async(req, res)=>{
     try {
         const getActivity = await getActivitiesQuery();
-        console.log(getActivity);
         return res.json(getActivity);
     } catch (error) {
         console.error("Error completion percentage controller file:", error);
@@ -45,4 +49,16 @@ const getActivitiesController = async(req, res)=>{
     }
 }
 
-module.exports = { assignDueDateController , markActivitiesController , completionPercentageController , getActivitiesController };
+const setActivitiesRequiredController = async(req, res)=>{
+    try {
+        const {activity_id} = req.body
+        const setActivities = await setActivitiesRequiredQuery(activity_id);
+        console.log(setActivities);
+        return res.json(setActivities);
+    } catch (error) {
+        console.error("Error completion percentage controller file:", error);
+        res.status(500).send("Internal Server Error");
+    }
+}
+
+module.exports = { assignDueDateController , markActivitiesController , completionPercentageController , getActivitiesController , setActivitiesRequiredController };

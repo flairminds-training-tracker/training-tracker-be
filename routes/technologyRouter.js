@@ -5,7 +5,7 @@ const technologyRouter = express.Router();
 
 // public routes
 technologyRouter.post('/createTrainingPlan', assignTechnology);
-technologyRouter.get('/', getTechnologyController);
+technologyRouter.post('/', getTechnologyController);
 
 
 module.exports = { technologyRouter };
