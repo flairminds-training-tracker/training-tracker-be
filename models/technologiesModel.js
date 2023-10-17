@@ -59,8 +59,8 @@ const assignTechnologyQuery = async (trainee_trainer_tech_table, training_plan_t
         return "Data inserted successfully into both tables.";
     } catch (error) {
         console.error("Error in assignTechnologyQuery:", error);
-        await rollbackTransaction(error); // Ensure rollback on any error
-        throw error; // Re-throw error for higher level handling
+        await rollbackTransaction(error); 
+        throw error; 
     }
 };
 
