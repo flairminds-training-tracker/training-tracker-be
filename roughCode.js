@@ -252,3 +252,39 @@ const userRegistration = async (req, res) => {
           console.error(error); // Use console.error for logging errors
       }
 };
+
+
+// Given by Punit sir 
+// SELECT
+//     ttm.tech_topic_id AS topic_id,
+//     ttm.tech_topic_id,
+//     tst.tech_sub_topic_id AS sub_topic_id,
+//   FROM technologies_master tm
+//   INNER JOIN tech_topics_master ttm ON tm.tech_id = ttm.tech_id
+//   INNER JOIN tech_sub_topics_master tst ON ttm.tech_topic_id = tst.tech_topic_id
+//   INNER JOIN activities_master
+//   ttt.tech_id = ?
+
+
+
+const getTTTId = getTTTIdResult[0].ttt_id;
+
+        for (let i = 0; i < paramsfortp.length; i++) {
+            const activityId = paramsfortp[i];
+            
+            if (activityId && activityId.activity_id !== null) {
+                const params = [getTTTId, activityId];
+                console.log("The params are -->", params);
+                const insertQueryTrainingPlan = `
+                    INSERT INTO training_plan (ttt_id, activity_id)
+                    VALUES (?, ?)`;
+
+                const trainingPlanResult = await executeQuery(insertQueryTrainingPlan, params);
+                if (trainingPlanResult.error) {
+                    await rollbackTransaction(trainingPlanResult.error);
+                    throw trainingPlanResult.error; 
+                }
+            } else {
+                console.error("Invalid or null activity_id");
+            }
+        }

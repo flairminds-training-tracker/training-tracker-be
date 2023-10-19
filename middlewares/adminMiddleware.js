@@ -13,13 +13,11 @@ const checkUserAuth = async (req, res, next) => {
   try {
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
       const email = decodedToken.email;
-      console.log("Email:", email);
 
-      const selectQuery = `SELECT * FROM User WHERE is_admin = 1 AND email = ? `;
+      const selectQuery = `SELECT * FROM user WHERE is_admin = 1 AND email = ? `;
       const user = req.user = await executeQuery(selectQuery, email);
 
       if (user && user.is_admin !==0) {
-          console.log("The email is --", email);
           next();
       } else {
           res.status(401).send({ "status": "failed", "message": "You cannot change password since you don't have admin rights " });

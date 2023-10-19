@@ -61,10 +61,9 @@ const queries = [
     start_date TIMESTAMP NOT NULL,
     end_date TIMESTAMP NOT NULL,
     status_id INT NOT NULL REFERENCES status_master(status_id),
-    comment_id INT REFERENCES comments(comment_id),
     created_by INT NOT NULL REFERENCES user(user_id),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    required BOOLEAN NOT NULL,
+    required BOOLEAN NOT NULL DEFAULT TRUE,
     modified_by INT REFERENCES user(user_id),
     modified_at TIMESTAMP
   );

@@ -1,7 +1,6 @@
 const { assignTechnologyQuery , getTechnology } = require('../models/technologiesModel.js');
-
+     
 const assignTechnology = async (req, res) => {
-        return new Promise(async (resolve , reject) =>{
             try {
             const { trainee_id, trainer_id, tech_id, tech_topic_id, tech_sub_topic_id, activity_id, due_date , start_date , end_date, status_id, required,  created_by, modified_by , ttt_id , comment_id} = req.body;
             const now = new Date();
@@ -17,9 +16,7 @@ const assignTechnology = async (req, res) => {
             console.error(error);
             res.status(500).send("Unable to register");
         }
-        })
 }
-
 const getTechnologyController = async(req , res) =>{
     try {
         const results = await getTechnology();
