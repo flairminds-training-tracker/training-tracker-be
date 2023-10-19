@@ -16,7 +16,7 @@ const checkUserAuth = async (req, res, next) => {
 
       const selectQuery = `SELECT * FROM user WHERE is_admin = 1 AND email = ? `;
       const user = req.user = await executeQuery(selectQuery, email);
-
+      console.log(user[0].user_name)
       if (user && user.is_admin !==0) {
           next();
       } else {

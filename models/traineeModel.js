@@ -1,4 +1,3 @@
-const { query } = require('express');
 const {executeQuery} = require('../db_config/db_schema.js');
 
 // get Trainer and trainee dropdown
@@ -14,15 +13,15 @@ const getStatusQuery = () =>{
 // Get all the details of trainee like Name of trainee, trained by, activities information, completion percentage, start and end date
 const getTraineeDetailsQuery = ()=>{
     const query = `SELECT 
-    u1.user_name as Trainee_Name,
-    CONCAT(u2.user_name, ' (Trainer)') as Trained_By,
-    COUNT(CASE WHEN c.is_resolved = false THEN 1 ELSE NULL END) as Unresolved_Comments,
-    COUNT(CASE WHEN tp.status_id = 1 THEN 1 ELSE NULL END) as Unreviewed_Status,
-    COUNT(CASE WHEN tp.status_id = 6 THEN 1 ELSE NULL END) as Activities_Not_Started,
-    COUNT(CASE WHEN tp.status_id = 5 THEN 1 ELSE NULL END) as Delayed_Activities,
+    u1.user_name as trainee_name,
+    2.user_name as trained_by,
+    COUNT(CASE WHEN c.is_resolved = false THEN 1 ELSE NULL END) as unresolved_comments,
+    COUNT(CASE WHEN tp.status_id = 1 THEN 1 ELSE NULL END) as unreviewed_status,
+    COUNT(CASE WHEN tp.status_id = 6 THEN 1 ELSE NULL END) as activities_not_started,
+    COUNT(CASE WHEN tp.status_id = 5 THEN 1 ELSE NULL END) as delayed_activities,
     COUNT(CASE WHEN tp.status_id = 2 THEN 1 ELSE NULL END) / COUNT(*) * 100 as Completed_Activities_Percentage,
-    tech.technology as Technology,
-    MAX(tp.due_date) as Last_Due_Date
+    tech.technology as technology,
+    MAX(tp.due_date) as last_due_Date
 FROM 
     trainee_trainer_tech ttt
 JOIN 

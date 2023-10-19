@@ -1,4 +1,4 @@
-const { assignDueDateQuery , markActivitiesQuery , completionPercentage , getActivitiesByTechnologyQuery , setActivitiesRequiredQuery , saveTechnologyQuery } = require("../models/activitiesModel.js");
+const { assignDueDateQuery , markActivitiesQuery , completionPercentage , getActivitiesByTechnologyQuery , setActivitiesRequiredQuery , saveTpModel } = require("../models/activitiesModel.js");
 
 const assignDueDateController = async(req, res) => {
     try {
@@ -57,17 +57,20 @@ const getActivitiesByTechnologyController = async(req, res)=>{
     }
 }
 
-const saveActivitiesController = async(req, res)=>{
+const saveTpCtrl = async(req, res)=>{
     try {
-        const {tech_id , trainee_id , trainer_id,activities} = req.body;
-        const paramsForTTT = [tech_id , trainee_id , trainer_id];
-        const paramsForTP =activities
-        console.log(activities)
-        const results = await saveTechnologyQuery(paramsForTTT,paramsForTP)
-        return res.send(paramsForTP);
+        const results = await saveTpModel(req.body, req.user[0].user_id)
+        if (results.success) {
+            return res.send(results);
+        } else {
+            return res.send({
+                error: true,
+                errorMessage: results.errorMessage
+            })
+        }
     } catch (error) {
         console.error("Error completion percentage controller file:", error);
         res.status(500).send("Internal Server Error");
     }
 }
-module.exports = { assignDueDateController , markActivitiesController , completionPercentageController , getActivitiesByTechnologyController , setActivitiesRequiredController , saveActivitiesController };
+module.exports = { assignDueDateController , markActivitiesController , completionPercentageController , getActivitiesByTechnologyController , setActivitiesRequiredController , saveTpCtrl };

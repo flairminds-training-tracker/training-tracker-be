@@ -107,7 +107,9 @@ const getActivitiesByTechnologyQuery = async(params)=>{
         tech_sub_topics_master tst ON ttm.tech_topic_id = tst.tech_topic_id
         LEFT JOIN
         activities_master am ON tst.tech_sub_topic_id = am.sub_topic_id
-        WHERE tm.tech_id = ? AND am.activity_id is NOT NULL `;
+        WHERE tm.tech_id = ? AND am.activity_id is NOT NULL 
+        `
+        ;
         return executeQuery(selectQuery ,params);
     } catch (error) {
         console.log("Error in the activities model query");
@@ -115,29 +117,45 @@ const getActivitiesByTechnologyQuery = async(params)=>{
     }
 }
 
-const saveTechnologyQuery = async(paramsforttt, paramsfortp) => {
+const saveTpModel = async(params, user_id) => {
     try {
         await beginTransaction();
-        const insertQueryTTT = `INSERT INTO trainee_trainer_tech (trainee_id, trainer_id, tech_id) VALUES (?, ?, ?)`;
-        const trainee_trainer_tech_results = await executeQuery(insertQueryTTT, paramsforttt);
+        const {tech_id , trainee_id , trainer_id, activities} = params;
+        const paramsForTTT = [tech_id , trainee_id , trainer_id];
+        const paramsForTP = activities
+        const insertQueryTTT = `INSERT INTO trainee_trainer_tech (tech_id, trainee_id, trainer_id) VALUES (?, ?, ?)`;
+        const trainee_trainer_tech_results = await executeQuery(insertQueryTTT, paramsForTTT);
         if (trainee_trainer_tech_results.error) {
             await rollbackTransaction(trainee_trainer_tech_results.error);
             throw trainee_trainer_tech_results.error; 
         }
-        const getTTTIdResult = await executeQuery(`SELECT ttt_id FROM trainee_trainer_tech ORDER BY created_at DESC LIMIT 1`);
+        console.log("Inserted ttt data")
+        const tttId = trainee_trainer_tech_results.insertId
+        console.log(tttId)
+        // const getTTTIdResult = await executeQuery(`SELECT ttt_id FROM trainee_trainer_tech ORDER BY created_at DESC LIMIT 1`);
 
-        const tttId = getTTTIdResult[0].ttt_id;
-        const values = paramsfortp.map(param => [tttId, param.activity_id, param.due_date, param.required]);
-        const insertQuery = `INSERT INTO training_plan(ttt_id, activity_id, due_date, required) VALUES ?`;
+        //const tttId = getTTTIdResult[0].ttt_id;
+
+        const values = paramsForTP.map(param => [tttId, param.activity_id, param.due_date, param.required,1,user_id]);
+        console.log("THE USER ID IS -->",user_id);
+        
+        const insertQuery = `INSERT INTO training_plan(ttt_id , activity_id, due_date, required, status_id, created_by) VALUES ?`;
         const tp_results = await executeQuery(insertQuery, [values]);
         await commitTransaction();
 
-        return "Data inserted successfully into both tables.";
+        return {
+            success: true,
+            message: "Data inserted successfully into both tables."
+        };
     } catch (error) {
         console.error("Error in assignTechnologyQuery:", error);
         await rollbackTransaction(error); 
-        throw error; 
+        return {
+            success: false,
+            error: true,
+            errorMessage: error.message
+        }
     }
 };
 
-module.exports = { assignDueDateQuery , markActivitiesQuery , completionPercentage , getActivitiesByTechnologyQuery , setActivitiesRequiredQuery , saveTechnologyQuery , saveTechnologyQuery}
+module.exports = { assignDueDateQuery , markActivitiesQuery , completionPercentage , getActivitiesByTechnologyQuery , setActivitiesRequiredQuery , saveTpModel}
