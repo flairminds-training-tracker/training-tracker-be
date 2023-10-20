@@ -42,7 +42,7 @@ const queries = [
     description VARCHAR(255) NOT NULL,
     resource_link VARCHAR(255) NOT NULL,
     sequence INT NOT NULL , 
-    created_at DATETIME NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (activity_id),
     FOREIGN KEY (sub_topic_id) REFERENCES tech_sub_topics_master (tech_sub_topic_id)
   );
@@ -68,7 +68,7 @@ const queries = [
     FOREIGN KEY (trainer_id) REFERENCES users (user_id),
     FOREIGN KEY (tech_id) REFERENCES technologies_master (tech_id),
     FOREIGN KEY (created_by) REFERENCES users(user_id) , 
-    UNIQUE(ttt_id , trainer_id ,trainee_id)
+    UNIQUE(tech_id , trainer_id ,trainee_id)
   );
 
   CREATE TABLE IF NOT EXISTS training_plan (
@@ -80,7 +80,7 @@ const queries = [
     end_date DATETIME,
     status_id INT NOT NULL ,
     created_by INT NOT NULL,
-    created_at DATETIME NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     required BOOLEAN NOT NULL DEFAULT 1,
     modified_by INT,
     modified_at DATETIME,
@@ -99,7 +99,6 @@ const queries = [
     is_resolved BOOLEAN NOT NULL,
     comment TEXT NOT NULL,
     addded_by INT NOT NULL , 
-    training_plan_id INT NOT NULL,
     created_at DATETIME NOT NULL,
     resolved_on DATETIME NOT NULL,
     PRIMARY KEY (comment_id),
