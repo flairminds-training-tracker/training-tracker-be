@@ -36,7 +36,7 @@ const userLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
         if (email && password) {
-      const selectQuery = `SELECT * FROM user WHERE email = ?`;
+      const selectQuery = `SELECT * FROM users WHERE email = ?`;
       const result = await executeQuery(selectQuery, email);
       if (result.length == 0) {
         return res.status(400).json({error: `You're not registered yet. Please first sign up and you'll be able to log in.`, });
@@ -66,7 +66,7 @@ const changePassword = async (req , res) => {
     }
     try {
         const email = req.user[0].email
-        const query = 'SELECT password FROM user WHERE email = ?';
+        const query = 'SELECT password FROM users WHERE email = ?';
         const results = await executeQuery(query, [email]);
         if (results.length === 0) {
         return res.send({ status: 'Error', message: 'User not found' });

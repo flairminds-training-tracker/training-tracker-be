@@ -61,7 +61,7 @@ const completionPercentage = async(trainee_id)=>{
         SUM(tp.required) AS completed_activities,
         (SUM(tp.required) / COUNT(tp.training_plan_id)) * 100 AS completion_percentage
       FROM
-        user u
+        users u
       INNER JOIN
         trainee_trainer_tech ttt ON u.user_id = ttt.trainee_id
         INNER JOIN
