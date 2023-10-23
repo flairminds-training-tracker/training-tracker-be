@@ -15,7 +15,8 @@ const adminAuthMiddleware = async (req, res, next) => {
       const email = decodedToken.email;
 
       const selectQuery = `SELECT * FROM users WHERE is_admin = 1 AND email = ? `;
-      const user = req.user = await executeQuery(selectQuery, email);
+      const user =  await executeQuery(selectQuery, email);
+      req.user = user[0];
       console.log(user[0].user_name)
       if (user && user.is_admin !==0) {
           next();

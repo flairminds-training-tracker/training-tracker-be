@@ -1,7 +1,7 @@
 const {saveTpModel, getTrainingActModel} = require('../models/trainingPlanModel')
 const saveTpCtrl = async(req, res)=>{
     try {
-        const results = await saveTpModel(req.body, req.user[0].user_id)
+        const results = await saveTpModel(req.body, req.user.user_id)
         if (results.success) {
             return res.send(results);
         } else {
@@ -18,7 +18,7 @@ const saveTpCtrl = async(req, res)=>{
 const getTrainingActCtrl = async(req, res) =>{
     try {
         //const {user_id} = req.body;
-        const results = await getTrainingActModel(req.user[0].user_id)
+        const results = await getTrainingActModel(req.user.user_id)
         return res.send(results);
 
     } catch (error) {
