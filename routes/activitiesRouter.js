@@ -1,5 +1,5 @@
 const express = require("express");
-const { assignDueDateController, markActivitiesController, completionPercentageController  , getActivitiesByTechnologyController, setActivitiesRequiredController, saveTpCtrl, getTrainingActCtrl} =
+const { assignDueDateController, markActivitiesController, completionPercentageController  , getActivitiesByTechnologyController, setActivitiesRequiredController} =
  require('../controllers/activitiesController');
 const { adminAuthMiddleware } = require("../middlewares/adminMiddleware");
 
