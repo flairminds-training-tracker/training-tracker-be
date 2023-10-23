@@ -288,4 +288,5 @@ const getTTTId = getTTTIdResult[0].ttt_id;
                 console.error("Invalid or null activity_id");
             }
         }
-
+      
+http://localhost:9090/user/reset/Swaraj@gmail.com/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IlN3YXJhakBnbWFpbC5jb20iLCJpYXQiOjE2OTgwNjE3NzksImV4cCI6MTY5ODQ5Mzc3OX0.Guso74M7nvedRWHbKHRW8F1WALgN3932CmPGZlrtnRc
