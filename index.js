@@ -8,6 +8,7 @@ const { userRouter } = require("./routes/userRouter.js");
 const { technologyRouter } = require("./routes/technologyRouter.js");
 const { activitiesRouter } = require("./routes/activitiesRouter.js");
 const {traineeRouter}  = require('./routes/traineeRouter.js');
+const {trainingPlanRouter} =  require('./routes/trainingPlanRouter.js')
 const port = process.env.PORT || 9000;
 
 app.use(cors());
@@ -17,6 +18,7 @@ app.use("/user", userRouter);
 app.use("/tech", technologyRouter);
 app.use("/acti", activitiesRouter);
 app.use("/trainee", traineeRouter);
+app.use("/trainingPlan", trainingPlanRouter)
 
 app.listen(port, ()=> {
   console.log(`Server running on port ${port}`);

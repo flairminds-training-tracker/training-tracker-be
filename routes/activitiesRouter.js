@@ -1,18 +1,17 @@
 const express = require("express");
-const { assignDueDateController, markActivitiesController, completionPercentageController  , getActivitiesByTechnologyController, setActivitiesRequiredController, saveTpCtrl} =
+const { assignDueDateController, markActivitiesController, completionPercentageController  , getActivitiesByTechnologyController, setActivitiesRequiredController, saveTpCtrl, getTrainingActCtrl} =
  require('../controllers/activitiesController');
-const { checkUserAuth } = require("../middlewares/adminMiddleware");
+const { adminAuthMiddleware } = require("../middlewares/adminMiddleware");
+
 
 const activitiesRouter = express.Router();
-activitiesRouter.use(checkUserAuth)
-activitiesRouter.put('/assignDueDate', assignDueDateController);
-activitiesRouter.put('/markRequired', markActivitiesController);
-activitiesRouter.get('/completionPercent/:trainee_id', completionPercentageController);
-activitiesRouter.post('/getActivities', getActivitiesByTechnologyController);
-activitiesRouter.post('/saveActivities', saveTpCtrl);
-// activitiesRouter.post('/saveActivities', saveActivitiesController);
+activitiesRouter.use(adminAuthMiddleware)
+// activitiesRouter.put('/assignDueDate', assignDueDateController);
+// activitiesRouter.put('/markRequired', markActivitiesController);
+// activitiesRouter.get('/completionPercent/:trainee_id', completionPercentageController);
+//activitiesRouter.put('/setNotRequired', setActivitiesRequiredController);
 
-activitiesRouter.put('/setNotRequired', setActivitiesRequiredController);
+activitiesRouter.post('/getActivities', getActivitiesByTechnologyController);
+
 
 module.exports = {activitiesRouter};
-;
