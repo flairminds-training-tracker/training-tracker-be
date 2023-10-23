@@ -7,10 +7,9 @@ const userRouter = express.Router();
 // public routes
 userRouter.post('/addUser', userRegistration);
 userRouter.post('/login', userLogin);
-// userRouter.post('/resetPasswordEmail', sendPasswordResetEmail);
-// userRouter.post('/resetPassword/:id/:token', userPasswordReset);
-
-
+userRouter.post('/resetPasswordEmail', sendPasswordResetEmail);
+userRouter.post('/resetPassword/:id/:token', userPasswordReset);
+ 
 // protected routes
 userRouter.post('/changePassword',changePassword );
 userRouter.get('/loggedUser',userAuthMiddleware, loggedUser);
