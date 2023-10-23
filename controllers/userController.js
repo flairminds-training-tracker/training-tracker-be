@@ -102,14 +102,17 @@ const sendPasswordResetEmail = async(req, res)=>{
         if(results.length == 0){
             return res.send({"status" : "Error" , "Message" : "User with this email doesnt exist."});
         }
+        console.log("");
         const SECRET = results.email + process.env.JWT_SECRET_KEY;
         const token = jwt.sign({ email: email }, SECRET, {
-            expiresIn: "15m",
+            expiresIn: "5d",
         });
-        const link = `http://localhost:3000/user/reset/${email}/${token}`;
+        const link = `http://localhost:9090/user/reset/${email}/${token}`;
+        console.log("The email is -->", email);
+        console.log("The token is -->",token);
         console.log(link);
         return res.send({"status" : "Success" , "Message" : "Password reset mail sent....Please check your mail"});
-
+ 
     } catch (error) {
         console.log(error);
         res.send(error);
@@ -120,6 +123,7 @@ const userPasswordReset = async(req , res) =>{
     const {password , password_confirmation} = req.body;
     const {email , token } = req.params;
     const results = await userExists(email);
+    console.log("Code working till this line....");
     const NEW_SECRET = email + process.env.JWT_SECRET_KEY;
     try {
         jwt.verify(token , NEW_SECRET);

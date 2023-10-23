@@ -6,7 +6,7 @@ const addUserQuery = (user_name,email , password , is_admin , createdAt) => {
     return executeQuery(query , params);
 }
 const userExists = (email)=>{
-    const query = `SELECT * FROM user WHERE email = ?`;
+    const query = `SELECT * FROM users WHERE email = ?`;
     const params = email;
     return executeQuery(query , params);
 }
