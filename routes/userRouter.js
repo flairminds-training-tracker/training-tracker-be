@@ -1,6 +1,6 @@
 const express = require("express");
 const {userRegistration , userLogin, changePassword, loggedUser, sendPasswordResetEmail, userPasswordReset} = require('../controllers/userController.js');
-const { checkUserAuth } = require('../middlewares/adminMiddleware.js');
+const { adminAuthMiddleware } = require('../middlewares/adminMiddleware.js');
 const userRouter = express.Router();
 
 // public routes
@@ -11,9 +11,8 @@ userRouter.post('/login', userLogin);
 
 
 // protected routes
-userRouter.post('/changePassword',checkUserAuth , changePassword );
-userRouter.get('/loggedUser', checkUserAuth , loggedUser);
-
+userRouter.post('/changePassword',changePassword );
+userRouter.get('/loggedUser', loggedUser);
 
 
 module.exports = { userRouter };

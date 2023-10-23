@@ -57,33 +57,6 @@ const getActivitiesByTechnologyController = async(req, res)=>{
     }
 }
 
-const saveTpCtrl = async(req, res)=>{
-    try {
-        const results = await saveTpModel(req.body, req.user[0].user_id)
-        if (results.success) {
-            return res.send(results);
-        } else {
-            return res.send({
-                error: true,
-                errorMessage: results.errorMessage
-            })
-        }
-    } catch (error) {
-        console.error("Error completion percentage controller file:", error);
-        res.status(500).send("Internal Server Error");
-    }
-}
-const getTrainingActCtrl = async(req, res) =>{
-    try {
-        const {user_id} = req.body;
-        const results = await getTrainingActModel(user_id)
-        return res.send(results);
 
-    } catch (error) {
-        console.error("Error completion percentage controller file:", error);
-        res.status(500).send("Internal Server Error");        
-    }
-}
-
-module.exports = { assignDueDateController , markActivitiesController , completionPercentageController , getActivitiesByTechnologyController , setActivitiesRequiredController , saveTpCtrl, getTrainingActCtrl };
+module.exports = { assignDueDateController , markActivitiesController , completionPercentageController , getActivitiesByTechnologyController , setActivitiesRequiredController  };
 
