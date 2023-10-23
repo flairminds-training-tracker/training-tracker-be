@@ -15,10 +15,11 @@ const adminAuthMiddleware = async (req, res, next) => {
       const email = decodedToken.email;
 
       const selectQuery = `SELECT * FROM users WHERE is_admin = 1 AND email = ? `;
-      const user =  await executeQuery(selectQuery, email);
-      req.user = user[0];
-      console.log(user[0].user_name)
-      if (user && user.is_admin !==0) {
+      const user  =  await executeQuery(selectQuery, email);
+      req.user = user[0]
+      //console.log(req.user.user_id)
+      //console.log(req.user.user_name)
+      if (user && req.user.is_admin !==0) {
           next();
       } else {
           res.status(401).send({ "status": "failed", "message": "You cannot change password since you don't have admin rights " });

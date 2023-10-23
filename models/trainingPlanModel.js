@@ -70,6 +70,7 @@ const saveTpModel = async(params, user_id) => {
 
 const getTrainingActModel= async(params) =>{
     try {
+        console.log(params)
         const selectQuery = ` SELECT  
         technologies_master.technology AS technology,
         activities_master.activity AS activity_name,

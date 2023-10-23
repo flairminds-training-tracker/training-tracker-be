@@ -88,7 +88,7 @@ const changePassword = async (req , res) => {
 };
 const loggedUser  = async (req, res) => {
     try {
-    const user = req.user[0].email
+    const user = req.user.email
     return res.send({ "user": user })    
     } catch (error) {
         console.log(error);
