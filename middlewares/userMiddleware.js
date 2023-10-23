@@ -17,7 +17,7 @@ const userAuthMiddleware = async (req, res, next) => {
       const selectQuery = `SELECT * FROM users WHERE is_admin = 0 and email = ? `;
       const user = req.user= await executeQuery(selectQuery, email);
 
-      if (user && user.is_admin ==0)  {
+      if (user[0])  {
          next();
       } else {
           res.status(401).send({ "status": "failed", "message": "User not found" });

@@ -18,6 +18,7 @@ const saveTpCtrl = async(req, res)=>{
 const getTrainingActCtrl = async(req, res) =>{
     try {
         //const {user_id} = req.body;
+        console.log(req.user[0].user_id)
         const results = await getTrainingActModel(req.user[0].user_id)
         return res.send(results);
 

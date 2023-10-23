@@ -14,3 +14,4 @@ traineeRouter.post('/active' , userAuthMiddleware ,getActiveOrNotController )
 // traineeRouter.get('/tech/:tech_id', );
 
 module.exports = { traineeRouter };
+
