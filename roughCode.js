@@ -288,3 +288,4 @@ const getTTTId = getTTTIdResult[0].ttt_id;
                 console.error("Invalid or null activity_id");
             }
         }
+

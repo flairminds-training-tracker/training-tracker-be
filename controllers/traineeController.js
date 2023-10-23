@@ -29,10 +29,12 @@ const getStatusController = async (req , res)=>{
         res.status(500).send("Internal Server Error");
     }
 }
-// Get all the details of trainee like Name of trainee, trained by, activities information, completion percentage, start and end date
 const getActiveOrNotController = async (req, res)=>{
     try {
-        const results = await getTraineeDetailsQuery();
+        let params = {
+            activityType: req.query.activityType
+        }
+        const results = await getTraineeDetailsQuery(params);
         return res.send(results);
     } catch (error) {
         console.error("Error in get Trainee details controller..:", error);

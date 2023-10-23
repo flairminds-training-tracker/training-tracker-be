@@ -76,25 +76,25 @@ INSERT INTO status_master (status_id, status, is_active, created_at) VALUES (5, 
 
 
 
-INSERT INTO comments (comment_id, user_id, is_resolved, comment, training_plan_id, created_at, resolved_on)
+INSERT INTO comments (comment_id, added_by, is_resolved, comment, training_plan_id, created_at, resolved_on)
 VALUES 
 (1, 1, false, 'Comment 1 by User 1 on Training Plan 1.', 1, '2023-10-11 12:10:40.956', NULL);
 
-INSERT INTO comments (comment_id, user_id, is_resolved, comment, training_plan_id, created_at, resolved_on)
+INSERT INTO comments (comment_id, added_by, is_resolved, comment, training_plan_id, created_at, resolved_on)
 VALUES 
 (2, 3, false, 'Comment 2 by User 3 on Training Plan 2.', 2, '2023-10-11 12:10:40.956', NULL);
 
 
-INSERT INTO comments (comment_id, user_id, is_resolved, comment, training_plan_id, created_at, resolved_on)
+INSERT INTO comments (comment_id, added_by, is_resolved, comment, training_plan_id, created_at, resolved_on)
 VALUES 
 (3, 5, false, 'Comment 3 by User 5 on Training Plan 3.', 3, '2023-10-11 12:10:40.956', NULL);
 
 
-INSERT INTO comments (comment_id, user_id, is_resolved, comment, training_plan_id, created_at, resolved_on)
+INSERT INTO comments (comment_id, added_by, is_resolved, comment, training_plan_id, created_at, resolved_on)
 VALUES 
 (4, 2, false, 'Comment 4 by User 2 on Training Plan 1.', 1, '2023-10-11 12:10:40.956', NULL);
 
-INSERT INTO comments (comment_id, user_id, is_resolved, comment, training_plan_id, created_at, resolved_on)
+INSERT INTO comments (comment_id, added_by, is_resolved, comment, training_plan_id, created_at, resolved_on)
 VALUES 
 (5, 4, false, 'Comment 5 by User 4 on Training Plan 2.', 2, '2023-10-11 12:10:40.956', NULL);
 
@@ -186,7 +186,18 @@ INSERT INTO tech_topics_master (tech_topic_id, tech_id, topic, created_at) VALUE
 INSERT INTO tech_topics_master (tech_topic_id, tech_id, topic, created_at) VALUES (3, 1, 'Control Structures', NOW());
 INSERT INTO tech_topics_master (tech_topic_id, tech_id, topic, created_at) VALUES (4, 1, 'Functions and Methods', NOW());
 INSERT INTO tech_topics_master (tech_topic_id, tech_id, topic, created_at) VALUES (5, 1, 'Arrays and Lists', NOW());
-
+INSERT INTO tech_topics_master(tech_id , topic ) VALUES(2 , 'logic building');
+INSERT INTO tech_topics_master (tech_id, topic) VALUES
+(2, 'Object-Oriented Programming in Java'),
+(2, 'Data Structures in Java'),
+(2, 'Exception Handling'),
+(2, 'Multithreading and Concurrency'),
+(2, 'Java Swing and GUI Programming'),
+(2, 'File I/O and Serialization'),
+(2, 'Java Collections Framework'),
+(2, 'Networking in Java'),
+(2, 'JDBC and Database Connectivity in Java'),
+(2, 'Maven and Build Tools in Java');
 SELECT * FROM Activities_master
 
 INSERT INTO activities_master (activity_id, sub_topic_id, activity, resource_link, created_at) VALUES (1, 1, 'Introduction to Python Variables', 'https://example.com/activity1', NOW());
@@ -205,14 +216,6 @@ INSERT INTO activities_master (sub_topic_id, activity, resource_link, created_at
 
 -- For sub_topic_id = 3
 INSERT INTO activities_master (sub_topic_id, activity, resource_link, created_at) VALUES (3, 'Looping in Python', 'https://example.com/activity5', NOW());
-
-INSERT INTO status_master (status_id, status, is_active, created_at) VALUES (1, 100, true, NOW());
-INSERT INTO status_master (status_id, status, is_active, created_at) VALUES (2, 200, true, NOW());
-INSERT INTO status_master (status_id, status, is_active, created_at) VALUES (3, 300, false, NOW());
-INSERT INTO status_master (status_id, status, is_active, created_at) VALUES (4, 400, true, NOW());
-INSERT INTO status_master (status_id, status, is_active, created_at) VALUES (5, 500, false, NOW());
-
-
 
 INSERT INTO comments (comment_id, user_id, is_resolved, comment, training_plan_id, created_at, resolved_on)
 VALUES 
@@ -279,4 +282,16 @@ VALUES
   ( 15, 'Go Variables and Data Types', CURRENT_TIMESTAMP),
   ( 15, 'Go Functions and Methods', CURRENT_TIMESTAMP),
   ( 15, 'Go Concurrency', CURRENT_TIMESTAMP)
+INSERT INTO tech_sub_topics_master (tech_topic_id, sub_topic, created_at)
+VALUES
+  (11, 'Java Exception Handling', CURRENT_TIMESTAMP),
+  (11, 'Java Multithreading and Concurrency', CURRENT_TIMESTAMP),
+  (11, 'Java Swing and GUI Programming', CURRENT_TIMESTAMP),
+  (11, 'Java File I/O and Serialization', CURRENT_TIMESTAMP),
+  (11, 'Java Collections Framework', CURRENT_TIMESTAMP),
+  (11, 'Java Networking', CURRENT_TIMESTAMP),
+  (12, 'Java JDBC and Database Connectivity', CURRENT_TIMESTAMP),
+  (12, 'Java Maven and Build Tools', CURRENT_TIMESTAMP),
+  (13, 'Java Spring Framework', CURRENT_TIMESTAMP),
+  (13, 'Java Hibernate ORM', CURRENT_TIMESTAMP);
 

@@ -7,7 +7,7 @@ const checkUserAuth = async (req, res, next) => {
 
   if (authorization == null) {
       return res.status(401).send({ "status": "failed", "message": "Unauthorized User, No Token" });
-  }
+  } 
   token = authorization.split(' ')[1];
 
   try {

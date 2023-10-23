@@ -121,9 +121,9 @@ const saveTpModel = async(params, user_id) => {
     try {
         await beginTransaction();
         const {tech_id , trainee_id , trainer_id, activities} = params;
-        const paramsForTTT = [tech_id , trainee_id , trainer_id];
+        const paramsForTTT = [tech_id , trainee_id , trainer_id , user_id];
         const paramsForTP = activities
-        const insertQueryTTT = `INSERT INTO trainee_trainer_tech (tech_id, trainee_id, trainer_id) VALUES (?, ?, ?)`;
+        const insertQueryTTT = `INSERT INTO trainee_trainer_tech (tech_id, trainee_id, trainer_id , created_by) VALUES (?, ?, ?, ?)`;
         const trainee_trainer_tech_results = await executeQuery(insertQueryTTT, paramsForTTT);
         if (trainee_trainer_tech_results.error) {
             await rollbackTransaction(trainee_trainer_tech_results.error);
@@ -131,18 +131,13 @@ const saveTpModel = async(params, user_id) => {
         }
         console.log("Inserted ttt data")
         const tttId = trainee_trainer_tech_results.insertId
-        console.log(tttId)
-        // const getTTTIdResult = await executeQuery(`SELECT ttt_id FROM trainee_trainer_tech ORDER BY created_at DESC LIMIT 1`);
+        console.log(tttId);
 
-        //const tttId = getTTTIdResult[0].ttt_id;
-
-        const values = paramsForTP.map(param => [tttId, param.activity_id, param.due_date, param.required,1,user_id]);
-        console.log("THE USER ID IS -->",user_id);
+        const values = paramsForTP.map(param => [tttId, param.activity_id, param.due_date, param.required ? param.required : true , 2, user_id]);
         
         const insertQuery = `INSERT INTO training_plan(ttt_id , activity_id, due_date, required, status_id, created_by) VALUES ?`;
         const tp_results = await executeQuery(insertQuery, [values]);
         await commitTransaction();
-
         return {
             success: true,
             message: "Data inserted successfully into both tables."

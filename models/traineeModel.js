@@ -11,31 +11,35 @@ const getStatusQuery = () =>{
     return executeQuery(query);
 }
 // Get all the details of trainee like Name of trainee, trained by, activities information, completion percentage, start and end date
-const getTraineeDetailsQuery = ()=>{
-    const query = `SELECT 
-    u1.user_name as trainee_name,
-    u1.user_name as trained_by,
-    COUNT(CASE WHEN c.is_resolved = false THEN 1 ELSE NULL END) as unresolved_comments,
-    COUNT(CASE WHEN tp.status_id = 1 THEN 1 ELSE NULL END) as unreviewed_status,
-    COUNT(CASE WHEN tp.status_id = 6 THEN 1 ELSE NULL END) as activities_not_started,
-    COUNT(CASE WHEN tp.status_id = 5 THEN 1 ELSE NULL END) as delayed_activities,
-    COUNT(CASE WHEN tp.status_id = 2 THEN 1 ELSE NULL END) / COUNT(*) * 100 as Completed_Activities_Percentage,
-    tech.technology as technology,
-    MAX(tp.due_date) as last_due_Date
-FROM 
-    trainee_trainer_tech ttt
-JOIN 
-    users u1 ON ttt.trainee_id = u1.user_id
-JOIN 
-    users u2 ON ttt.trainer_id = u2.user_id
-JOIN 
-    technologies_master tech ON ttt.tech_id = tech.tech_id
-LEFT JOIN 
-    training_plan tp ON ttt.ttt_id = tp.ttt_id
-LEFT JOIN 
-    comments c ON tp.training_plan_id = c.training_plan_id
-GROUP BY 
-    u1.user_name, u2.user_name, tech.technology;`;
-    return executeQuery(query)
+const getTraineeDetailsQuery = (params)=>{
+    let whereCondition = ''
+    if (params.activityType == 'active') {
+        whereCondition = `WHERE Completed_Activities_Percentage != 100`
+    } else if (params.activityType == 'old') {
+        whereCondition = `WHERE Completed_Activities_Percentage = 100`
+    }
+    const activeActivitiesQuery = `WITH cte AS (SELECT 
+        ttt.trainee_id as trainee_name,
+        ttt.trainer_id as trained_by,
+        COUNT(CASE WHEN c.is_resolved = false THEN 1 ELSE NULL END) as unresolved_comments,
+        COUNT(CASE WHEN tp.status_id = 1 THEN 1 ELSE NULL END) as unreviewed_status,
+        COUNT(CASE WHEN tp.status_id = 6 THEN 1 ELSE NULL END) as activities_not_started,
+        COUNT(CASE WHEN tp.status_id = 5 THEN 1 ELSE NULL END) as delayed_activities,
+        COUNT(CASE WHEN tp.status_id = 2 THEN 1 ELSE NULL END) / COUNT(*) * 100 as Completed_Activities_Percentage,
+        tech.technology as technology,
+        MAX(tp.due_date) as last_due_Date
+    FROM trainee_trainer_tech ttt
+    JOIN users u1 ON ttt.trainee_id = u1.user_id
+    JOIN users u2 ON ttt.trainer_id = u2.user_id
+    JOIN technologies_master tech ON ttt.tech_id = tech.tech_id
+    LEFT JOIN  
+        training_plan tp ON ttt.ttt_id = tp.ttt_id
+    LEFT JOIN 
+        comments c ON tp.training_plan_id = c.training_plan_id
+    GROUP BY 
+        u1.user_name, u2.user_name, tech.technology
+    )
+    SELECT * FROM cte ${whereCondition}`;
+    return executeQuery(oldActivitiesQuery , params)
 }
 module.exports = {getTrainee , getStatusQuery , getTraineeDetailsQuery};
