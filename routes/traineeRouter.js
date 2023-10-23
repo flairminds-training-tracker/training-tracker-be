@@ -1,4 +1,4 @@
-const {getTraineeController, getTraineeDetailsController, getStatusController , getActiveOrNotController} = require('../controllers/traineeController.js')
+const {getTraineeController, getTraineeDetailsController, getStatusController , getActiveOrNotController, updateActivityForUserController} = require('../controllers/traineeController.js')
 const express = require("express");
 const traineeRouter = express.Router();
 
@@ -7,6 +7,7 @@ traineeRouter.post('/', getTraineeController);
 traineeRouter.post('/traineeDetails', getTraineeDetailsController);
 traineeRouter.post('/getStatus', getStatusController);
 traineeRouter.post('/active' ,getActiveOrNotController )
+traineeRouter.post('/updateActivityForUser' , updateActivityForUserController)
 
 
 // traineeRouter.get('/tech/:tech_id', );

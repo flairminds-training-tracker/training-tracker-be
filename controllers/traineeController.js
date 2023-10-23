@@ -1,4 +1,5 @@
-const {getTrainee, getStatusQuery , getTraineeDetailsQuery} = require('../models/traineeModel.js');
+const {getTrainee, getStatusQuery , getTraineeDetailsQuery, updateActivityForUserQuery} = require('../models/traineeModel.js');
+const { getActivitiesByTechnologyController } = require('./activitiesController.js');
 
 const getTraineeController = async(req , res) =>{
     try {
@@ -41,4 +42,13 @@ const getActiveOrNotController = async (req, res)=>{
         res.status(500).send("Internal Server Error"); 
     }
 }
-module.exports = {getTraineeController  , getTraineeDetailsController , getStatusController , getActiveOrNotController};
+const updateActivityForUserController = async(req , res)=>{
+    try {
+        const results = await updateActivityForUserQuery(req.body)
+        return res.send(results);
+    } catch (error) {
+        console.error("Error in get Trainee details controller..:", error);
+        res.status(500).send("Internal Server Error"); 
+    }
+}
+module.exports = {getTraineeController  , getTraineeDetailsController , getStatusController , getActiveOrNotController , updateActivityForUserController};

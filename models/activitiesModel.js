@@ -133,7 +133,7 @@ const saveTpModel = async(params, user_id) => {
         const tttId = trainee_trainer_tech_results.insertId
         console.log(tttId);
 
-        const values = paramsForTP.map(param => [tttId, param.activity_id, param.due_date, param.required ? param.required : true , 2, user_id]);
+        const values = paramsForTP.map(param => [tttId, param.activity_id, param.due_date, param.required ? param.required : 1 , 2, user_id]);
         
         const insertQuery = `INSERT INTO training_plan(ttt_id , activity_id, due_date, required, status_id, created_by) VALUES ?`;
         const tp_results = await executeQuery(insertQuery, [values]);
