@@ -48,13 +48,19 @@ const queries = [
       );
       
       
-      CREATE TABLE IF NOT EXISTS status_master (
-        status_id INT NOT NULL AUTO_INCREMENT,
-        status VARCHAR(255) NOT NULL,
-        is_active BOOLEAN NOT NULL,
-        created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (status_id)
-      );
+      create table if not exists status_master (
+        status_id int not null auto_increment,
+        status varchar(63) not null,
+        status_display varchar(63) not null comment 'display name for the statuses',
+        trainee_select boolean not null default true comment 'to flag what status the trainee can select for updating the status',
+        trainer_select boolean not null default true comment 'to flag what status the trainee can select for updating the status',
+        sequence int not null,
+        created_by int not null,
+        created_on timestamp not null default current_timestamp,
+        primary key (status_id),
+        foreign key (created_by) references user(user_id)
+      ) comment = 'master list of statuses to be used in the system';
+      
       
       CREATE TABLE IF NOT EXISTS trainee_trainer_tech (
         ttt_id INT NOT NULL AUTO_INCREMENT,

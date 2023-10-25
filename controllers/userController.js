@@ -46,7 +46,7 @@ const userLogin = async (req, res) => {
         const token = jwt.sign({ email: email }, process.env.JWT_SECRET_KEY, {
             expiresIn: "5d",
         })
-        return res.send(`User logged in successfully with email - ${email} and has ${token}`);
+        return res.send({"token":token,"success":true});
         } else {
             return res.send(`Invalid email or password...`);
         }
