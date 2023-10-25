@@ -101,4 +101,5 @@ const getTrainingActModel= async(params) =>{
     }
 
 }
+
 module.exports = {saveTpModel, getTrainingActModel}

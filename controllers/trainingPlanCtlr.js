@@ -26,4 +26,12 @@ const getTrainingActCtrl = async(req, res) =>{
         res.status(500).send("Internal Server Error");        
     }
 }
-module.exports = {saveTpCtrl, getTrainingActCtrl}
+const updateTrainingActCtrl = async(req,res) =>{
+    try {
+        
+    } catch (error) {
+        console.error("Error completion percentage controller file:", error);
+        res.status(500).send("Internal Server Error");  
+    }
+}
+module.exports = {saveTpCtrl, getTrainingActCtrl, updateTrainingActCtrl}
