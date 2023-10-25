@@ -1,4 +1,4 @@
-const {getTraineeController, getTraineeDetailsController, getStatusController , getActiveOrNotController, updateActivityForUserController} = require('../controllers/traineeController.js')
+const {getTraineeController, getTraineeDetailsController, getStatusController , getActiveOrNotController, updateActivityForUserController, markAsReviewedController, getTraineesDetailsForStatusCtrl} = require('../controllers/traineeController.js')
 const express = require("express");
 const traineeRouter = express.Router();
 const { adminAuthMiddleware } = require("../middlewares/adminMiddleware");
@@ -9,7 +9,8 @@ traineeRouter.post('/',adminAuthMiddleware, getTraineeController);
 traineeRouter.post('/traineeDetails',userAuthMiddleware, getTraineeDetailsController);
 traineeRouter.post('/getStatus', userAuthMiddleware,getStatusController);
 traineeRouter.post('/active' , userAuthMiddleware ,getActiveOrNotController )
-
+traineeRouter.post('/markAsReviewed' ,userAuthMiddleware ,markAsReviewedController);
+traineeRouter.get('/viewStatus/:status_id' ,getTraineesDetailsForStatusCtrl);
 
 // traineeRouter.get('/tech/:tech_id', );
 
