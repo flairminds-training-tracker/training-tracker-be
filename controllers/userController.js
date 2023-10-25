@@ -1,7 +1,5 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const { addUserQuery, userExists , updatePassword} = require("../models/userModel.js");
 const {executeQuery} = require('../db_config/db_schema.js');
 const {transporter} = require('../db_config/emailConfig.js');
