@@ -47,7 +47,6 @@ const queries = [
         FOREIGN KEY (sub_topic_id) REFERENCES tech_sub_topics_master (tech_sub_topic_id)
       );
       
-      
       create table if not exists status_master (
         status_id int not null auto_increment,
         status varchar(63) not null,

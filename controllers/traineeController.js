@@ -1,4 +1,4 @@
-const {getTrainee, getStatusQuery , getTraineeDetailsQuery, updateActivityForUserQuery} = require('../models/traineeModel.js');
+const {getTrainee, getStatusQuery , getTraineeDetailsQuery, updateActivityForUserQuery, markAsReviewedQuery, getTraineesDetailsForStatusQuery} = require('../models/traineeModel.js');
 const { getActivitiesByTechnologyController } = require('./activitiesController.js');
 
 const getTraineeController = async(req , res) =>{
@@ -51,4 +51,25 @@ const updateActivityForUserController = async(req , res)=>{
         res.status(500).send("Internal Server Error"); 
     }
 }
-module.exports = {getTraineeController  , getTraineeDetailsController , getStatusController , getActiveOrNotController , updateActivityForUserController};
+
+const markAsReviewedController = async(req , res)=>{
+    try {
+        const results = markAsReviewedQuery(req.body.training_plan_id);
+        return res.send(results); 
+    } catch (error) {
+        console.error("Error in markAsReviewedControllerr..:", error);
+        res.status(500).send("Internal Server Error"); 
+    }
+}
+
+const getTraineesDetailsForStatusCtrl = async(req, res)=>{
+    try {
+        const results = await getTraineesDetailsForStatusQuery(req.params.status_id);
+        console.log(results);
+        return res.send(results);
+    } catch (error) {
+        console.error("Error in view Status Controller :", error);
+        res.status(500).send("Internal Server Error"); 
+    }
+}
+module.exports = {getTraineeController  , getTraineeDetailsController , getStatusController , getActiveOrNotController , updateActivityForUserController , markAsReviewedController , getTraineesDetailsForStatusCtrl};

@@ -17,8 +17,6 @@ const adminAuthMiddleware = async (req, res, next) => {
       const selectQuery = `SELECT * FROM users WHERE is_admin = 1 AND email = ? `;
       const user  =  await executeQuery(selectQuery, email);
       req.user = user[0]
-      //console.log(req.user.user_id)
-      //console.log(req.user.user_name)
       if (user && req.user.is_admin !==0) {
           next();
       } else {

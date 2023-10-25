@@ -53,4 +53,28 @@ const updateActivityForUserQuery = (param) =>{
     return executeQuery(updateQuery , params)
 }
 
-module.exports = {getTrainee , getStatusQuery , getTraineeDetailsQuery , updateActivityForUserQuery};
+const markAsReviewedQuery = (params)=>{
+    const query = `UPDATE training_plan SET status_id = (select status_id from status_master where status='completed') WHERE training_plan_id = ? `;
+    return executeQuery(query, params);
+}
+
+const getTraineesDetailsForStatusQuery = (params) => {
+    let whereCondition = '';
+    if(params){
+        whereCondition = `WHERE sm.status_id = ${params}`;
+    }
+    const query = `SELECT
+    a.activity AS activity_name,tp.training_plan_id,tt.topic,tst.sub_topic, tp.due_date,a.description,tp.start_date,tp.end_date,c.comment AS comments,a.resource_link
+  FROM training_plan tp JOIN status_master sm ON tp.status_id = sm.status_id
+  JOIN activities_master a ON tp.activity_id = a.activity_id
+  JOIN tech_sub_topics_master tst ON a.sub_topic_id = tst.tech_sub_topic_id
+  JOIN tech_topics_master tt ON tst.tech_topic_id = tt.tech_topic_id
+  LEFT JOIN comments c ON tp.training_plan_id = c.training_plan_id
+  ${whereCondition}
+  GROUP BY a.activity_id, tp.due_date, c.comment_id
+  ORDER BY tp.due_date;
+  `;
+    return executeQuery(query, params);
+}
+
+module.exports = {getTrainee , getStatusQuery , getTraineeDetailsQuery , updateActivityForUserQuery , markAsReviewedQuery , getTraineesDetailsForStatusQuery};
