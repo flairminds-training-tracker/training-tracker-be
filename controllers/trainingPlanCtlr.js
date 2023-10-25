@@ -1,4 +1,4 @@
-const {saveTpModel, getTrainingActModel} = require('../models/trainingPlanModel')
+const {saveTpModel, getTrainingActModel, updateTrainingActModel, updateCommentStatusModel} = require('../models/trainingPlanModel')
 const saveTpCtrl = async(req, res)=>{
     try {
         const results = await saveTpModel(req.body, req.user.user_id)
@@ -29,9 +29,43 @@ const getTrainingActCtrl = async(req, res) =>{
 const updateTrainingActCtrl = async(req,res) =>{
     try {
         
+        const results = await updateTrainingActModel(req.body,req.user.user_id)
+        if (results.success)
+        {
+            return res.send(results.message);
+        } 
+        else 
+        {
+            return res.send({
+                error: true,
+                errorMessage: results.errorMessage
+            })
+        }
+       // return res.send(results)
+
     } catch (error) {
         console.error("Error completion percentage controller file:", error);
         res.status(500).send("Internal Server Error");  
     }
 }
-module.exports = {saveTpCtrl, getTrainingActCtrl, updateTrainingActCtrl}
+const updateCommentStatusCtrl = async(req,res) =>{
+    try {
+        const results = await updateCommentStatusModel(req.body)
+        if (results.success)
+        {
+            return res.send(results.message);
+        } 
+        else
+        {
+            return res.send({
+                error: true,
+                errorMessage: results.errorMessage
+            })
+        }
+    } catch (error) {
+        console.error("Error completion percentage controller file:", error);
+        res.status(500).send("Internal Server Error");  
+    }
+   
+}
+module.exports = {saveTpCtrl, getTrainingActCtrl, updateTrainingActCtrl, updateCommentStatusCtrl}

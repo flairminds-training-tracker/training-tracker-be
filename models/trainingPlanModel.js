@@ -1,3 +1,4 @@
+const { updateTrainingActCtrl } = require("../controllers/trainingPlanCtlr.js");
 const { executeQuery } = require("../db_config/db_schema.js");
 const {con} = require('../db_config/db_schema.js')
 const beginTransaction = () => {
@@ -58,7 +59,7 @@ const saveTpModel = async(params, user_id) => {
             message: "Data inserted successfully into both tables."
         };
     } catch (error) {
-        console.error("Error in assignTechnologyQuery:", error);
+        //console.error("Error in assignTechnologyQuery:", error);
         await rollbackTransaction(error); 
         return {
             success: false,
@@ -101,5 +102,106 @@ const getTrainingActModel= async(params) =>{
     }
 
 }
+const updateTrainingActModel= async(params,user_id) =>{
+    try {
 
-module.exports = {saveTpModel, getTrainingActModel}
+        await beginTransaction(); 
+        const tp_id = params.tp_id  
+        // const selectData = `select start_date, end_date, status_id from training_plan WHERE training_plan_id = ?`;       
+        // const tp_results = await executeQuery(selectData,tp_id)
+
+        // let status_id = tp_results[0].status_id
+        // let start_date = tp_results[0].start_date
+        // let end_date = tp_results[0].end_date
+        let setValues = []
+        if (params.status_id) {
+            setValues.push(`status_id = ${params.status_id}`)
+        }
+        if (params.start_date) {
+            setValues.push(`start_date = ${params.start_date}`)
+        }
+        if (params.end_date) {
+            setValues.push(`end_date = ${params.end_date}`)
+        }
+        console.log(setValues)
+        // if (tp_results.error) {
+        //     await rollbackTransaction(tp_results.error);
+        //     throw tp_results.error; 
+        // }
+        // if("status_id" in params)
+        // {
+        //     status_id = params.status_id
+        //     console.log(status_id)
+        // }
+        // if("start_date" in params)
+        // {
+        //     start_date = params.start_date
+        // }
+        // if("end_date" in params)
+        // {
+        //     end_date = params.end_date
+        // }
+
+
+        const paramsForUpdate = [user_id, tp_id]
+        const updateTrainingQuery = `update training_plan set ${setValues.join(',')}, modified_by = ?, modified_at = now() where training_plan_id = ?`;
+        const update_results = await executeQuery(updateTrainingQuery,paramsForUpdate)
+        if (update_results.error) {
+            await rollbackTransaction(update_results.error);
+            throw update_results.error; 
+        }
+        if("comment" in params)
+        {
+            const comment = params.comment
+            paramsForComment = [user_id,0,comment,tp_id]
+            const insertCommentQuery = `insert into comments(added_by,is_resolved,comment,training_plan_id) values(?,?,?,?)`;
+            const insert_comment_results = await executeQuery(insertCommentQuery,paramsForComment)
+            if (insert_comment_results.error) {
+                await rollbackTransaction(insert_comment_results.error);
+                throw insert_comment_results.error;
+            }
+        }
+        await commitTransaction();
+        return {
+            success: true,
+            message: "Update Operation Completed"
+        };
+
+    } catch (error) { 
+        await rollbackTransaction(error); 
+        return {
+            success: false,
+            error: true,
+            errorMessage: error.message
+        }
+    }
+
+}
+const updateCommentStatusModel= async(params) =>{
+    try {
+        const {comment_id}=params
+        const updateCommentQuery = `update comments set is_resolved = 1,resolved_on=now() where comment_id = ?`
+        
+        const update_comment_status=executeQuery(updateCommentQuery,comment_id)
+        if(update_comment_status.error)
+        {
+            return {
+                errorMessage:update_comment_status.error
+            }
+        }
+        return {
+            success: true,
+            message: "Updated Comment Status "
+        };
+        
+    } catch (error) {
+        return {
+            success: false,
+            error: true,
+            errorMessage: error.message
+        }
+        
+    }
+}
+
+module.exports = {saveTpModel, getTrainingActModel, updateTrainingActModel, updateCommentStatusModel}
