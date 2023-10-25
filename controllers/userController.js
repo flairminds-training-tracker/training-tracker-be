@@ -1,8 +1,8 @@
-const { addUserQuery, userExists , updatePassword} = require("../models/userModel.js");
-const {executeQuery} = require('../db_config/db_schema.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
+const { addUserQuery, userExists , updatePassword} = require("../models/userModel.js");
+const {executeQuery} = require('../db_config/db_schema.js');
+const {transporter} = require('../db_config/emailConfig.js');
 const userRegistration = async (req, res) => {
     var { user_name, email, password, is_admin } = req.body;
 
@@ -80,7 +80,7 @@ const changePassword = async (req , res) => {
         const hashPassword = await bcrypt.hash(newPassword, salt);
         const isWorking = await updatePassword(hashPassword,email);
         console.log({ status: 'Success', message: 'Password updated successfully' });
-        return res.send({ status: 'Success', message: 'Password updated successfully' });
+        return res.send({ status: 'Success', message: 'Password updated successfully' , "info" : info});
     } catch (error) {
         console.error('Error in changing password:', error);
         return res.send({ status: 'Error', message: 'Error in changing password' });
@@ -108,11 +108,14 @@ const sendPasswordResetEmail = async(req, res)=>{
             expiresIn: "5d",
         });
         const link = `http://localhost:9090/user/reset/${email}/${token}`;
-        console.log("The email is -->", email);
-        console.log("The token is -->",token);
-        console.log(link);
+        let info = await transporter.sendMail({
+          from: process.env.EMAIL_FROM,
+          to: results.email,
+          subject: "GeekShop - Password Reset Link",
+          html: `<a href=${link}>Click Here</a> to Reset Your Password`
+        })
         return res.send({"status" : "Success" , "Message" : "Password reset mail sent....Please check your mail"});
- 
+
     } catch (error) {
         console.log(error);
         res.send(error);
@@ -123,8 +126,8 @@ const userPasswordReset = async(req , res) =>{
     const {password , password_confirmation} = req.body;
     const {email , token } = req.params;
     const results = await userExists(email);
-    console.log("Code working till this line....");
-    const NEW_SECRET = email + process.env.JWT_SECRET_KEY;
+    const NEW_SECRET = results.email + process.env.JWT_SECRET_KEY;
+    console.log(NEW_SECRET);
     try {
         jwt.verify(token , NEW_SECRET);
         if(!(password && password_confirmation)){
@@ -138,6 +141,6 @@ const userPasswordReset = async(req , res) =>{
         return res.send({ status: 'Success', message: 'Password updated successfully' });
     } catch (error) {
         console.log(error);
-    }
+    } 
 }
 module.exports = { userRegistration , userLogin , changePassword , loggedUser , sendPasswordResetEmail , userPasswordReset};

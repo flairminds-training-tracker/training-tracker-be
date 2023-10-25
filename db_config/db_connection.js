@@ -3,11 +3,11 @@ require('dotenv').config();
 
 const con = mysql.createConnection({
   connectionLimit: 10,
-  host: "lifeactions.cp3m4vrc1c2y.ap-south-1.rds.amazonaws.com",
-  user: "dev_lifeactions",
-  password: "RmjDrgbRlwqdSPb3DDaf",
-  database: "training_tracker_dev",
-  port: 3306,
+  host: `${process.env.HOST}`,
+  user: `${process.env.USER}`,
+  password: `${process.env.PASSWORD}`,
+  database: `${process.env.DATABASE}`,
+  port: `${process.env.DATABASE_PORT}`,
   multipleStatements: true,
 });
 
