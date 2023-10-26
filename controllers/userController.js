@@ -149,5 +149,6 @@ const userPasswordReset = async(req , res) =>{
     } catch (error) {
         console.log(error);
     } 
-}
+    } 
+
 module.exports = { userRegistration , userLogin , changePassword , loggedUser , sendPasswordResetEmail , userPasswordReset};
