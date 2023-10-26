@@ -52,6 +52,10 @@ const saveTpModel = async(params, user_id) => {
         
         const insertQuery = `INSERT INTO training_plan(ttt_id , activity_id, due_date, required, status_id, created_by) VALUES ?`;
         const tp_results = await executeQuery(insertQuery, [values]);
+        if (tp_results.error) {
+            await rollbackTransaction(tp_results.error);
+            throw tp_results.error; 
+        }
         await commitTransaction();
 
         return {
@@ -72,33 +76,68 @@ const saveTpModel = async(params, user_id) => {
 const getTrainingActModel= async(params) =>{
     try {
         console.log(params)
-        const selectQuery = ` SELECT  
-        technologies_master.technology AS technology,
-        activities_master.activity AS activity_name,
-        tech_topics_master.topic AS topic,
-        tech_sub_topics_master.sub_topic AS sub_topic,
-        training_plan.start_date AS start_date,
-        training_plan.due_date AS due_date,
-        training_plan.end_date AS end_date,
-        comments.comment AS comments,
-        activities_master.resource_link AS resource_link,
-        activities_master.description AS description,
-        status_master.status AS status
-        FROM training_plan
-        INNER JOIN activities_master ON training_plan.activity_id = activities_master.activity_id
-        INNER JOIN tech_sub_topics_master ON activities_master.sub_topic_id = tech_sub_topics_master.tech_sub_topic_id
-        INNER JOIN tech_topics_master ON tech_sub_topics_master.tech_topic_id = tech_topics_master.tech_topic_id
-        INNER JOIN technologies_master ON tech_topics_master.tech_id = technologies_master.tech_id
-        LEFT JOIN comments ON training_plan.training_plan_id = comments.training_plan_id
-        INNER JOIN status_master ON training_plan.status_id = status_master.status_id
-        INNER JOIN trainee_trainer_tech ON training_plan.ttt_id = trainee_trainer_tech.ttt_id
-        INNER JOIN users ON trainee_trainer_tech.trainee_id = users.user_id
-        WHERE trainee_trainer_tech.trainee_id = ? `;
-        return executeQuery(selectQuery ,params);
+        const selectQuery = `SELECT  
+        tm.tech_id AS tech_id,
+        tm.technology AS tech,
+        am.activity AS activity_name,
+        ttm.topic AS topic_name,
+        tst.sub_topic AS sub_topic_name,
+        tp.training_plan_id as tp_id,
+        tp.start_date AS start_date,
+        tp.due_date AS due_date,
+        tp.end_date AS end_date,
+        c.comment AS comments,
+        am.resource_link AS resource_link,
+        am.description AS activity_description,
+        sm.status AS status_name
+        FROM training_plan AS tp
+        INNER JOIN activities_master AS am ON tp.activity_id = am.activity_id
+        INNER JOIN tech_sub_topics_master AS tst ON am.sub_topic_id = tst.tech_sub_topic_id        
+        INNER JOIN tech_topics_master AS ttm ON tst.tech_topic_id = ttm.tech_topic_id
+        INNER JOIN technologies_master AS tm ON ttm.tech_id = tm.tech_id
+        LEFT JOIN comments AS c ON tp.training_plan_id = c.training_plan_id
+        INNER JOIN status_master AS sm ON tp.status_id = sm.status_id
+        INNER JOIN trainee_trainer_tech AS ttt ON tp.ttt_id = ttt.ttt_id
+        INNER JOIN users AS u ON ttt.trainee_id = u.user_id
+        WHERE ttt.trainee_id = ?;`
+        // const selectQuery = ` SELECT  
+        // technologies_master.technology AS technology,
+        // activities_master.activity AS activity_name,
+        // tech_topics_master.topic AS topic,
+        // tech_sub_topics_master.sub_topic AS sub_topic,
+        // training_plan.start_date AS start_date,
+        // training_plan.training_plan_id as tp_id,
+        // training_plan.due_date AS due_date,
+        // training_plan.end_date AS end_date,
+        // comments.comment AS comments,
+        // activities_master.resource_link AS resource_link,
+        // activities_master.description AS description,
+        // status_master.status AS status
+        // FROM training_plan
+        // INNER JOIN activities_master ON training_plan.activity_id = activities_master.activity_id
+        // INNER JOIN tech_sub_topics_master ON activities_master.sub_topic_id = tech_sub_topics_master.tech_sub_topic_id
+        // INNER JOIN tech_topics_master ON tech_sub_topics_master.tech_topic_id = tech_topics_master.tech_topic_id
+        // INNER JOIN technologies_master ON tech_topics_master.tech_id = technologies_master.tech_id
+        // LEFT JOIN comments ON training_plan.training_plan_id = comments.training_plan_id
+        // INNER JOIN status_master ON training_plan.status_id = status_master.status_id
+        // INNER JOIN trainee_trainer_tech ON training_plan.ttt_id = trainee_trainer_tech.ttt_id
+        // INNER JOIN users ON trainee_trainer_tech.trainee_id = users.user_id
+        // WHERE trainee_trainer_tech.trainee_id = ? `;
+        training_act_results= await executeQuery(selectQuery ,params);
+        if(training_act_results.error){
+            return {
+                error: true,
+                errorMessage:training_act_results.error
+            }
+        }
+        return training_act_results
 
     } catch (error) {
-        console.log("Error in the activities model query");
-        throw error;
+        return {
+            success: false,
+            error: true,
+            errorMessage: error.message
+        }
     }
 
 }
@@ -118,38 +157,25 @@ const updateTrainingActModel= async(params,user_id) =>{
             setValues.push(`status_id = ${params.status_id}`)
         }
         if (params.start_date) {
-            setValues.push(`start_date = ${params.start_date}`)
+            start_date = new Date(params.start_date).toISOString().slice(0, 19).replace('T', ' ');
+            setValues.push(`start_date = '${start_date}'`)
+            console.log(start_date)
         }
         if (params.end_date) {
-            setValues.push(`end_date = ${params.end_date}`)
+            end_date = new Date(params.end_date).toISOString().slice(0, 19).replace('T', ' ');
+            setValues.push(`end_date = '${end_date}'`)
         }
-        console.log(setValues)
-        // if (tp_results.error) {
-        //     await rollbackTransaction(tp_results.error);
-        //     throw tp_results.error; 
-        // }
-        // if("status_id" in params)
-        // {
-        //     status_id = params.status_id
-        //     console.log(status_id)
-        // }
-        // if("start_date" in params)
-        // {
-        //     start_date = params.start_date
-        // }
-        // if("end_date" in params)
-        // {
-        //     end_date = params.end_date
-        // }
-
-
-        const paramsForUpdate = [user_id, tp_id]
-        const updateTrainingQuery = `update training_plan set ${setValues.join(',')}, modified_by = ?, modified_at = now() where training_plan_id = ?`;
-        const update_results = await executeQuery(updateTrainingQuery,paramsForUpdate)
-        if (update_results.error) {
-            await rollbackTransaction(update_results.error);
-            throw update_results.error; 
+        if(setValues.length>0)
+        {
+            const paramsForUpdate = [user_id, tp_id]
+            const updateTrainingQuery = `update training_plan set ${setValues.join(',')}, modified_by = ?, modified_at = now() where training_plan_id = ?`;
+            const update_results = await executeQuery(updateTrainingQuery,paramsForUpdate)
+            if (update_results.error) {
+                await rollbackTransaction(update_results.error);
+                throw update_results.error; 
+            }
         }
+        
         if("comment" in params)
         {
             const comment = params.comment
@@ -186,6 +212,7 @@ const updateCommentStatusModel= async(params) =>{
         if(update_comment_status.error)
         {
             return {
+                error: true,
                 errorMessage:update_comment_status.error
             }
         }

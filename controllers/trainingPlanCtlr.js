@@ -11,7 +11,7 @@ const saveTpCtrl = async(req, res)=>{
             })
         }
     } catch (error) {
-        console.error("Error completion percentage controller file:", error);
+        console.error("Exception in save training plan controller", error);
         res.status(500).send("Internal Server Error");
     }
 }
@@ -19,10 +19,20 @@ const getTrainingActCtrl = async(req, res) =>{
     try {
         //const {user_id} = req.body;
         const results = await getTrainingActModel(req.user.user_id)
-        return res.send(results);
+        if(results.error)
+        {
+            return res.send({
+                error:true,
+                errorMessage:results.errorMessage
+            })
+        }
+        else
+        {
+             return res.send(results)
+        }
 
     } catch (error) {
-        console.error("Error completion percentage controller file:", error);
+        console.error("Exception in get training activities controller", error);
         res.status(500).send("Internal Server Error");        
     }
 }
@@ -44,7 +54,7 @@ const updateTrainingActCtrl = async(req,res) =>{
        // return res.send(results)
 
     } catch (error) {
-        console.error("Error completion percentage controller file:", error);
+        console.error("Exception in update training plan controller", error);
         res.status(500).send("Internal Server Error");  
     }
 }
@@ -63,7 +73,7 @@ const updateCommentStatusCtrl = async(req,res) =>{
             })
         }
     } catch (error) {
-        console.error("Error completion percentage controller file:", error);
+        console.error("Exception in update comment status controller", error);
         res.status(500).send("Internal Server Error");  
     }
    
