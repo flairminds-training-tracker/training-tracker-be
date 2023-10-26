@@ -44,6 +44,8 @@ const setActivitiesRequiredController = async(req, res)=>{
         res.status(500).send("Internal Server Error");
     }
 };
+
+// TESTED WORKING COMPLETELY FINE
 const getActivitiesByTechnologyController = async(req, res)=>{
     try {
         const {tech_id} = req.body;

@@ -1,4 +1,4 @@
-const {getTrainee, getStatusQuery , getTraineeDetailsQuery, updateActivityForUserQuery, markAsReviewedQuery, getTraineesDetailsForStatusQuery} = require('../models/traineeModel.js');
+const {getTrainee, getStatusQuery , getTraineeDetailsQuery, updateActivityForUserQuery, markAsReviewedQuery, getTraineesDetailsForStatusQuery, getStatusDropdownQuery} = require('../models/traineeModel.js');
 const { getActivitiesByTechnologyController } = require('./activitiesController.js');
 
 const getTraineeController = async(req , res) =>{
@@ -72,4 +72,13 @@ const getTraineesDetailsForStatusCtrl = async(req, res)=>{
         res.status(500).send("Internal Server Error"); 
     }
 }
-module.exports = {getTraineeController  , getTraineeDetailsController , getStatusController , getActiveOrNotController , updateActivityForUserController , markAsReviewedController , getTraineesDetailsForStatusCtrl};
+const getStatusDropdownCtrl = async(req , res)=>{
+    try {
+        const results = await getStatusDropdownQuery();
+        return res.send(results);
+    } catch (error) {
+        console.error("Error in get Status Dropdown controller..:", error);
+        res.status(500).send("Internal Server Error");
+    }
+}
+module.exports = {getTraineeController  , getTraineeDetailsController , getStatusController , getActiveOrNotController , updateActivityForUserController , markAsReviewedController , getTraineesDetailsForStatusCtrl , getStatusDropdownCtrl};

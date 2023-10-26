@@ -88,6 +88,7 @@ const changePassword = async (req , res) => {
         return res.send({ status: 'Error', message: 'Error in changing password' });
     }
 };
+
 const loggedUser  = async (req, res) => {
     try {
     const user = req.user.email
@@ -96,33 +97,34 @@ const loggedUser  = async (req, res) => {
         console.log(error);
         return res.send(error)
     }
-}
-const sendPasswordResetEmail = async(req, res)=>{
-    const {email} = req.body;
-    const results = await userExists(email)
+};
+
+const sendPasswordResetEmail = async (req, res) => {
+    const { email } = req.body;
+    const results = await userExists(email);
+
     try {
-        if(results.length == 0){
-            return res.send({"status" : "Error" , "Message" : "User with this email doesnt exist."});
+        if (results.length === 0) {
+            return res.send({ "status": "Error", "Message": "User with this email doesn't exist." });
         }
-        console.log("");
         const SECRET = results.email + process.env.JWT_SECRET_KEY;
-        const token = jwt.sign({ email: email }, SECRET, {
-            expiresIn: "5d",
-        });
-        const link = `http://localhost:9090/user/reset/${email}/${token}`;
-        let info = await transporter.sendMail({
-          from: process.env.EMAIL_FROM,
-          to: results.email,
-          subject: "GeekShop - Password Reset Link",
-          html: `<a href=${link}>Click Here</a> to Reset Your Password`
-        })
-        return res.send({"status" : "Success" , "Message" : "Password reset mail sent....Please check your mail"});
+        const token = jwt.sign({ email: email }, SECRET, { expiresIn: "5d" });
+
+        // const link = `http://localhost:9090/user/reset/${email}/${token}`;
+        // email stuff
+        const info = transporter.sendMail({
+            from: '"Omkar Hirave 👻" <omkarhirve05@gmail.com>',
+            to: results[0].email,
+            subject: "Wake me up when september ends....",
+            html: `<a href="${link}">Click Here</a> to Reset Your Password`,
+          });
+        return res.send({ "status": "Success", "Message": "Password reset mail sent....Please check your mail" });
 
     } catch (error) {
         console.log(error);
         res.send(error);
     }
-}
+};
 
 const userPasswordReset = async(req , res) =>{
     const {password , password_confirmation} = req.body;

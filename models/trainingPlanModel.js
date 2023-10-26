@@ -43,10 +43,7 @@ const saveTpModel = async(params, user_id) => {
         console.log("Inserted ttt data")
         const tttId = trainee_trainer_tech_results.insertId
         console.log(tttId)
-        // const getTTTIdResult = await executeQuery(`SELECT ttt_id FROM trainee_trainer_tech ORDER BY created_at DESC LIMIT 1`);
-
-        //const tttId = getTTTIdResult[0].ttt_id;
-
+        
         const values = paramsForTP.map(param => [tttId, param.activity_id, param.due_date, param.required,1,user_id]);
         console.log("THE USER ID IS -->",user_id);
         
@@ -139,7 +136,6 @@ const getTrainingActModel= async(params) =>{
             errorMessage: error.message
         }
     }
-
 }
 const updateTrainingActModel= async(params,user_id) =>{
     try {

@@ -1,5 +1,4 @@
 const { executeQuery } = require("../db_config/db_schema.js");
-const {con} = require('../db_config/db_schema.js')
 
 const assignDueDateQuery = async (due_date , activity_id) => {
     try {
@@ -34,15 +33,12 @@ const completionPercentage = async(trainee_id)=>{
         COUNT(tp.training_plan_id) AS total_activities,
         SUM(tp.required) AS completed_activities,
         (SUM(tp.required) / COUNT(tp.training_plan_id)) * 100 AS completion_percentage
-      FROM
-        users u
-      INNER JOIN
-        trainee_trainer_tech ttt ON u.user_id = ttt.trainee_id
-        INNER JOIN
-        training_plan tp ON ttt.ttt_id = tp.ttt_id
+      FROM  users u 
+      INNER JOIN trainee_trainer_tech ttt ON u.user_id = ttt.trainee_id
+      INNER JOIN training_plan tp ON ttt.ttt_id = tp.ttt_id
       WHERE u.user_id = ?
       GROUP BY
-        u.user_id, u.user_name
+      u.user_id, u.user_name
       `
       return executeQuery(percentageQuery, trainee_id);
     } catch (error) {
@@ -63,6 +59,8 @@ const setActivitiesRequiredQuery = async (activity_id) => {
         throw error;
     }
 }
+// Get a list of all the activities for the technology_id
+// TESTED WORKING COMPLETELY FINE
 const getActivitiesByTechnologyQuery = async(params)=>{
     try {
         const selectQuery = `SELECT tm.tech_id , 
@@ -73,15 +71,9 @@ const getActivitiesByTechnologyQuery = async(params)=>{
         tst.sub_topic AS sub_topic,
         am.activity_id , 
         am.activity AS activity
-        FROM
-        technologies_master tm
-        LEFT JOIN
-        tech_topics_master ttm ON tm.tech_id = ttm.tech_id
-        LEFT JOIN
-        tech_sub_topics_master tst ON ttm.tech_topic_id = tst.tech_topic_id
-        LEFT JOIN
-        activities_master am ON tst.tech_sub_topic_id = am.sub_topic_id
-        WHERE tm.tech_id = ? AND am.activity_id is NOT NULL 
+        FROM technologies_master tm LEFT JOIN tech_topics_master 
+        ttm ON tm.tech_id = ttm.tech_id
+        LEFT JOIN tech_sub_topics_master tst ON ttm.tech_topic_id = tst.tech_topic_id LEFT JOIN activities_master am ON tst.tech_sub_topic_id = am.sub_topic_id WHERE tm.tech_id = ? AND am.activity_id is NOT NULL 
         `
         ;
         return executeQuery(selectQuery ,params);
@@ -90,6 +82,5 @@ const getActivitiesByTechnologyQuery = async(params)=>{
         throw error;
     }
 }
-
 
 module.exports = { assignDueDateQuery , markActivitiesQuery , completionPercentage , getActivitiesByTechnologyQuery , setActivitiesRequiredQuery }
