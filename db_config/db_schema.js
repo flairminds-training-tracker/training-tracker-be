@@ -132,7 +132,7 @@ const executeQuery = (query,params = []) => {
         console.log("The error is-",error);
         reject(error);
       } else {
-        console.log(result);
+        // console.log(result);
         resolve(result);
       }
     });
