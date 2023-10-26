@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { addUserQuery, userExists , updatePassword} = require("../models/userModel.js");
 const {executeQuery} = require('../db_config/db_schema.js');
 const {transporter} = require('../db_config/emailConfig.js');
@@ -83,6 +85,7 @@ const changePassword = async (req , res) => {
         const isWorking = await updatePassword(hashPassword,email);
         console.log({ status: 'Success', message: 'Password updated successfully' });
         return res.send({ status: 'Success', message: 'Password updated successfully' , "info" : info});
+        return res.send({ status: 'Success', message: 'Password updated successfully' , "info" : info});
     } catch (error) {
         console.error('Error in changing password:', error);
         return res.send({ status: 'Error', message: 'Error in changing password' });
@@ -107,6 +110,7 @@ const sendPasswordResetEmail = async (req, res) => {
         if (results.length === 0) {
             return res.send({ "status": "Error", "Message": "User with this email doesn't exist." });
         }
+        console.log("");
         const SECRET = results.email + process.env.JWT_SECRET_KEY;
         const token = jwt.sign({ email: email }, SECRET, { expiresIn: "5d" });
 
@@ -132,6 +136,8 @@ const userPasswordReset = async(req , res) =>{
     const results = await userExists(email);
     const NEW_SECRET = results.email + process.env.JWT_SECRET_KEY;
     console.log(NEW_SECRET);
+    const NEW_SECRET = results.email + process.env.JWT_SECRET_KEY;
+    console.log(NEW_SECRET);
     try {
         jwt.verify(token , NEW_SECRET);
         if(!(password && password_confirmation)){
@@ -145,6 +151,7 @@ const userPasswordReset = async(req , res) =>{
         return res.send({ status: 'Success', message: 'Password updated successfully' });
     } catch (error) {
         console.log(error);
+    } 
     } 
 }
 module.exports = { userRegistration , userLogin , changePassword , loggedUser , sendPasswordResetEmail , userPasswordReset};
