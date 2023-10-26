@@ -9,9 +9,9 @@ const { technologyRouter } = require("./routes/technologyRouter.js");
 const { activitiesRouter } = require("./routes/activitiesRouter.js");
 const {traineeRouter}  = require('./routes/traineeRouter.js');
 const {trainingPlanRouter} =  require('./routes/trainingPlanRouter.js')
-const port = process.env.PORT || 9000;
+const port = process.env.PORT || 9090;
 
-app.use(cors());
+app.use(cors({origin: '*',credentials: true}));
 app.use(express.json());
 
 app.use("/user", userRouter);
