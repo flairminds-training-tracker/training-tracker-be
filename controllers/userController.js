@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { addUserQuery, userExists , updatePassword} = require("../models/userModel.js");
 const {executeQuery} = require('../db_config/db_schema.js');
 const {transporter} = require('../db_config/emailConfig.js');
@@ -83,6 +85,7 @@ const changePassword = async (req , res) => {
         const isWorking = await updatePassword(hashPassword,email);
         console.log({ status: 'Success', message: 'Password updated successfully' });
         return res.send({ status: 'Success', message: 'Password updated successfully' , "info" : info});
+        return res.send({ status: 'Success', message: 'Password updated successfully' , "info" : info});
     } catch (error) {
         console.error('Error in changing password:', error);
         return res.send({ status: 'Error', message: 'Error in changing password' });
@@ -131,6 +134,8 @@ const userPasswordReset = async(req , res) =>{
     const {password , password_confirmation} = req.body;
     const {email , token } = req.params;
     const results = await userExists(email);
+    const NEW_SECRET = results.email + process.env.JWT_SECRET_KEY;
+    console.log(NEW_SECRET);
     const NEW_SECRET = results.email + process.env.JWT_SECRET_KEY;
     console.log(NEW_SECRET);
     try {
