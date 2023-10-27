@@ -11,7 +11,7 @@ const {traineeRouter}  = require('./routes/traineeRouter.js');
 const {trainingPlanRouter} =  require('./routes/trainingPlanRouter.js')
 const port = process.env.PORT || 9090;
 
-app.use(cors({origin: '*',credentials: true}));
+app.use(cors({origin: true,credentials: true}));
 app.use(express.json());
 
 app.use("/user", userRouter);
