@@ -26,8 +26,14 @@ const getTraineeDetailsQuery = (params)=>{
         SUM(CASE WHEN tp.status_id = 3 THEN 1 ELSE 0 END) as unreviewed_status,
         SUM(CASE WHEN tp.status_id = 5 THEN 1 ELSE 0 END) as delayed_activities,
         SUM(CASE WHEN tp.status_id = 4 THEN 1 ELSE 0 END) / COUNT(*) * 100 as Completed_Activities_Percentage,
+        SUM(CASE WHEN c.is_resolved = false THEN 1 ELSE NULL END) as unresolved_comments,
+        SUM(CASE WHEN tp.status_id = 1 THEN 1 ELSE 0 END) as activities_not_started ,
+        SUM(CASE WHEN tp.status_id = 3 THEN 1 ELSE 0 END) as unreviewed_status,
+        SUM(CASE WHEN tp.status_id = 5 THEN 1 ELSE 0 END) as delayed_activities,
+        SUM(CASE WHEN tp.status_id = 4 THEN 1 ELSE 0 END) / COUNT(*) * 100 as Completed_Activities_Percentage,
         tech.technology as technology,
         MAX(tp.due_date) as last_due_Date
+    FROM trainee_trainer_tech ttt 
     FROM trainee_trainer_tech ttt 
     JOIN users u1 ON ttt.trainee_id = u1.user_id
     JOIN users u2 ON ttt.trainer_id = u2.user_id

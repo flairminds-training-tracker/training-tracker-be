@@ -1,4 +1,5 @@
 const {getTrainee, getStatusQuery , getTraineeDetailsQuery, updateActivityForUserQuery, markAsReviewedQuery, getTraineesDetailsForStatusQuery, getStatusDropdownQuery} = require('../models/traineeModel.js');
+const {getTrainee, getStatusQuery , getTraineeDetailsQuery, updateActivityForUserQuery, markAsReviewedQuery, getTraineesDetailsForStatusQuery, getStatusDropdownQuery} = require('../models/traineeModel.js');
 const { getActivitiesByTechnologyController } = require('./activitiesController.js');
 
 const getTraineeController = async(_ , res) =>{

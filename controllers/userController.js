@@ -107,6 +107,8 @@ const sendPasswordResetEmail = async (req, res) => {
     try {
         if (results.length === 0) {
             return res.send({ "status": "Error", "Message": "User with this email doesn't exist." });
+        if (results.length === 0) {
+            return res.send({ "status": "Error", "Message": "User with this email doesn't exist." });
         }
         console.log("");
         const SECRET = results.email + process.env.JWT_SECRET_KEY;
