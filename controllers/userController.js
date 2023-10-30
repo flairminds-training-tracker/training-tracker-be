@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken');
 const { addUserQuery, userExists , updatePassword} = require("../models/userModel.js");
 const {executeQuery} = require('../db_config/db_schema.js');
 const {transporter} = require('../db_config/emailConfig.js');
-const userRegistration = async (req, res) => {
+
+const addUser = async (req, res) => {
     var { user_name, email, password, is_admin } = req.body;
 
     if (!(user_name , email && password)) {
@@ -28,7 +29,7 @@ const userRegistration = async (req, res) => {
         res.send(`User created successfully with email - ${email} and has ${token}`);
     } catch (error) {
         res.send("Unable to register");
-        console.error(error); // Use console.error for logging errors
+        console.error(error);
     }
 };
 
@@ -45,7 +46,7 @@ const userLogin = async (req, res) => {
     if (result[0].email === email && isMatch) {
         const user_id = result[0].user_id;
         const token = jwt.sign({ email: email,user_id:user_id }, process.env.JWT_SECRET_KEY, {
-            expiresIn: "15m",
+            expiresIn: "5d",
         })
         res.cookie('access_token', token);
         return res.send({"token":token,"success":true,"user_id":user_id,"is_admin": result[0].is_admin});
@@ -111,12 +112,12 @@ const sendPasswordResetEmail = async (req, res) => {
         const SECRET = results.email + process.env.JWT_SECRET_KEY;
         const token = jwt.sign({ email: email }, SECRET, { expiresIn: "5d" });
 
-        // const link = `http://localhost:9090/user/reset/${email}/${token}`;
+        const link = `http://localhost:9090/user/reset/${email}/${token}`;
         // email stuff
         const info = transporter.sendMail({
-            from: '"Omkar Hirave 👻" <omkarhirve05@gmail.com>',
+            from: '"Omkar Hirave " <omkarhirve05@gmail.com>',
             to: results[0].email,
-            subject: "Wake me up when september ends....",
+            subject: "This is the password reset link....",
             html: `<a href="${link}">Click Here</a> to Reset Your Password`,
           });
         return res.send({ "status": "Success", "Message": "Password reset mail sent....Please check your mail" });
@@ -149,4 +150,4 @@ const userPasswordReset = async(req , res) =>{
     } 
     } 
 
-module.exports = { userRegistration , userLogin , changePassword , loggedUser , sendPasswordResetEmail , userPasswordReset};
+module.exports = { addUser , userLogin , changePassword , loggedUser , sendPasswordResetEmail , userPasswordReset};

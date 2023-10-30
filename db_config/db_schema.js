@@ -138,5 +138,5 @@ const executeQuery = (query,params = []) => {
     });
   });
 };
-console.log(" 2. db schema file working properly");
+// console.log(" 2. db schema file working properly");
 module.exports = {executeQuery , con};

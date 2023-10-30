@@ -1,25 +1,25 @@
 const {executeQuery} = require('../db_config/db_schema.js');
 
-// get Trainer and trainee dropdown
+// API WORKING PERFECTLY FINE
 const getTrainee =() => {
     const query = `SELECT user_id , user_name FROM users WHERE is_admin = 0`;
     return executeQuery(query);
 }
-
+// API WORKING PERFECTLY FINE
 const getStatusQuery = () =>{
     const query = `SELECT status_id , status FROM status_master`
     return executeQuery(query);
 }
-// Get all the details of trainee like Name of trainee, trained by, activities information, completion percentage, start and end date
+// API Working perfectly fine
 const getTraineeDetailsQuery = (params)=>{
     let whereCondition = ''
     if (params.activityType == 'active') {
-        whereCondition = `WHERE Completed_Activities_Percentage != 100`
+        whereCondition = `WHERE Completed_Activities_Percentage != 100 `
     } else if (params.activityType == 'old') {
         whereCondition = `WHERE Completed_Activities_Percentage = 100`
     }
     const getOldAndActiveActivitiesQuery = `WITH cte AS (SELECT 
-        ttt.trainee_id as trainee_name,
+        ttt.trainee_id as trainee_id,
         ttt.trainer_id as trained_by,
         SUM(CASE WHEN c.is_resolved = false THEN 1 ELSE NULL END) as unresolved_comments,
         SUM(CASE WHEN tp.status_id = 1 THEN 1 ELSE 0 END) as activities_not_started ,
@@ -38,49 +38,53 @@ const getTraineeDetailsQuery = (params)=>{
     SELECT * FROM cte ${whereCondition}`;
     return executeQuery(getOldAndActiveActivitiesQuery , params)
 }
-
-// update the activity for a particular user and activity 
-const updateActivityForUserQuery = (param) =>{
-    const {user_id , activity_id , start_date , end_date , due_date} = param; 
-    const updateQuery = `UPDATE training_plan tp
-    JOIN trainee_trainer_tech ttt ON tp.ttt_id = ttt.ttt_id
-    SET tp.start_date = ?,
-        tp.end_date = ?
-    WHERE tp.activity_id = ?
-      AND ttt.trainee_id = ?;
-    `;
-    const params = [start_date , end_date ,due_date ,activity_id , user_id ];
-    return executeQuery(updateQuery , params)
-}
-// API WORKING CORRECTLY NO NEED TO CHECK
+// API WORKING PERFECTLY FINE
 const markAsReviewedQuery = (params)=>{
     const query = `UPDATE training_plan SET status_id = (select status_id from status_master where status='completed') WHERE training_plan_id = ? `;
     return executeQuery(query, params);
 }
-
+// API WORKING PERFECTLY FINE
 const getTraineesDetailsForStatusQuery = (params) => {
+    const queryParams = [params.status_id, params.trainee_id];
     let whereCondition = '';
     if(params){
-        whereCondition = `WHERE sm.status_id = ${params}`;
+        whereCondition = `WHERE sm.status_id = ? AND ttt.trainee_id = ?`;
     }
-    const query = `SELECT am.activity AS activity_name,
-    tp.training_plan_id AS training_plan_id, ttm.topic AS topic,
-    tst.sub_topic AS sub_topic,tp.due_date AS plan_due_date,am.description AS activity_description,tp.start_date AS plan_start_date,tp.end_date AS plan_end_date,c.comment AS comments,am.resource_link AS activity_link
-FROM training_plan tp JOIN status_master sm ON tp.status_id = sm.status_id
-JOIN activities_master am ON tp.activity_id = am.activity_id
-JOIN tech_sub_topics_master tst ON am.sub_topic_id = tst.tech_sub_topic_id
-JOIN tech_topics_master ttm ON tst.tech_topic_id = ttm.tech_topic_id LEFT 
-JOIN comments c ON tp.training_plan_id = c.training_plan_id
-  ${whereCondition}
-  GROUP BY a.activity_id, tp.due_date, c.comment_id
-  ORDER BY tp.due_date;`;
-    return executeQuery(query, params);
+    const query = `
+        SELECT 
+            tm.technology AS technology ,
+            am.activity AS activity_name,
+            tp.training_plan_id AS training_plan_id, 
+            ttm.topic AS topic,
+            tst.sub_topic AS sub_topic,
+            tp.due_date AS plan_due_date,
+            am.description AS activity_description,
+            tp.start_date AS plan_start_date,
+            tp.end_date AS plan_end_date,
+            c.comment AS comments,
+            am.resource_link AS activity_link
+        FROM 
+            training_plan tp 
+            JOIN status_master sm ON tp.status_id = sm.status_id
+            JOIN activities_master am ON tp.activity_id = am.activity_id
+            JOIN tech_sub_topics_master tst ON am.sub_topic_id = tst.tech_sub_topic_id
+            JOIN tech_topics_master ttm ON tst.tech_topic_id = ttm.tech_topic_id 
+            LEFT JOIN comments c ON tp.training_plan_id = c.training_plan_id
+            LEFT JOIN trainee_trainer_tech ttt ON tp.ttt_id = ttt.ttt_id 
+            LEFT JOIN technologies_master tm ON ttt.tech_id = tm.tech_id 
+        ${whereCondition}  
+        GROUP BY 
+            am.activity_id, tp.due_date, c.comment_id
+        ORDER BY 
+            tp.due_date;
+    `;
+    return executeQuery(query, queryParams);
 }
 
-// Shivani's API for training Page 
+// API WORKING PERFECTLY FINE 
 const getStatusDropdownQuery = (params) =>{
     const query = `SELECT status_id , status_display FROM status_master WHERE status_id BETWEEN 1 AND 3`;
     return executeQuery(query, params);
 }
 
-module.exports = {getTrainee , getStatusQuery , getTraineeDetailsQuery , updateActivityForUserQuery , markAsReviewedQuery , getTraineesDetailsForStatusQuery , getStatusDropdownQuery};
+module.exports = {getTrainee , getStatusQuery , getTraineeDetailsQuery ,  markAsReviewedQuery , getTraineesDetailsForStatusQuery , getStatusDropdownQuery};

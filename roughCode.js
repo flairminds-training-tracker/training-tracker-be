@@ -290,3 +290,40 @@ const getTTTId = getTTTIdResult[0].ttt_id;
         }
       
 http://localhost:9090/user/reset/Swaraj@gmail.com/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IlN3YXJhakBnbWFpbC5jb20iLCJpYXQiOjE2OTgwNjE3NzksImV4cCI6MTY5ODQ5Mzc3OX0.Guso74M7nvedRWHbKHRW8F1WALgN3932CmPGZlrtnRc
+
+
+  // const selectData = `select start_date, end_date, status_id from training_plan WHERE training_plan_id = ?`;       
+        // const tp_results = await executeQuery(selectData,tp_id)
+
+        // let status_id = tp_results[0].status_id
+        // let start_date = tp_results[0].start_date
+        // let end_date = tp_results[0].end_date
+// 
+// Shivani's comment on updateTrainingActModel code on trainingPlanModel.js
+
+
+// Shivani Has API for it so I am changing it 
+// update the activity for a particular user and activity 
+// const updateActivityForUserQuery = (param) =>{
+//   const {user_id , activity_id , start_date , end_date , due_date} = param; 
+//   const updateQuery = `UPDATE training_plan tp
+//   JOIN trainee_trainer_tech ttt ON tp.ttt_id = ttt.ttt_id
+//   SET tp.start_date = ?,
+//       tp.end_date = ?
+//   WHERE tp.activity_id = ?
+//     AND ttt.trainee_id = ?;
+//   `;
+//   const params = [start_date , end_date ,due_date ,activity_id , user_id ];
+//   return executeQuery(updateQuery , params)
+// }
+
+// Shivani Has API for it so I am changing it 
+// const getTraineeController = async(req , res) =>{
+//   try {
+//       const results = await getTrainee();
+//       return res.send(results);
+//   } catch (error) {
+//       console.error("Error in get Trainee controller..:", error);
+//       res.status(500).send("Internal Server Error");
+//   }
+// }
