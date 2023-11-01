@@ -45,7 +45,7 @@ const userLogin = async (req, res) => {
     if (result[0].email === email && isMatch) {
         const user_id = result[0].user_id;
         const token = jwt.sign({ email: email,user_id:user_id }, process.env.JWT_SECRET_KEY, {
-            expiresIn: "15m",
+            expiresIn: "5d",
         })
         res.cookie('access_token', token);
         return res.send({"token":token,"success":true,"user_id":user_id,"is_admin": result[0].is_admin});
