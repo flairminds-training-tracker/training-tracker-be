@@ -1,0 +1,5 @@
+2023-11-02T05:34:34.833Z undefined: {"timestamp":"2023-11-02T05:34:34.833Z","ipaddress":"::1","method":"POST","endpoint":"/addUser","responseTime":"N/A","req":{"user_name":"kk","email":"kk@gmail.com"}}
+
+2023-11-02T05:35:43.133Z undefined: {"timestamp":"2023-11-02T05:35:43.133Z","ipaddress":"::1","method":"POST","endpoint":"/addUser","responseTime":"N/A","req":{"user_name":"kk","email":"kk@gmail.com"}}
+
+2023-11-02T05:42:12.611Z undefined: ""
