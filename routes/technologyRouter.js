@@ -5,7 +5,7 @@ const technologyRouter = express.Router();
 const { adminAuthMiddleware } = require("../middlewares/adminMiddleware");
 
 //technologyRouter.post('/createTrainingPlan', assignTechnology);
-technologyRouter.post('/', adminAuthMiddleware, getTechnologyController);
+technologyRouter.get('/', adminAuthMiddleware, getTechnologyController);
 
 
 module.exports = { technologyRouter };

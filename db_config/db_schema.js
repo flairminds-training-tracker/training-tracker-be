@@ -47,14 +47,19 @@ const queries = [
         FOREIGN KEY (sub_topic_id) REFERENCES tech_sub_topics_master (tech_sub_topic_id)
       );
       
-      
       CREATE TABLE IF NOT EXISTS status_master (
         status_id INT NOT NULL AUTO_INCREMENT,
-        status VARCHAR(255) NOT NULL,
-        is_active BOOLEAN NOT NULL,
-        created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (status_id)
-      );
+        status VARCHAR(63) NOT NULL,
+        status_display VARCHAR(63) NOT NULL COMMENT 'display name for the statuses',
+        trainee_select BOOLEAN NOT NULL DEFAULT TRUE COMMENT 'to flag what status the trainee can select for updating the status',
+        trainer_select BOOLEAN NOT NULL DEFAULT TRUE COMMENT 'to flag what status the trainee can select for updating the status',
+        sequence INT NOT NULL,
+        created_by INT NOT NULL,
+        created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (status_id),
+        FOREIGN KEY (created_by) REFERENCES users(user_id)
+      ) COMMENT = 'master list of statuses to be used in the system';
+      
       
       CREATE TABLE IF NOT EXISTS trainee_trainer_tech (
         ttt_id INT NOT NULL AUTO_INCREMENT,
@@ -127,11 +132,11 @@ const executeQuery = (query,params = []) => {
         console.log("The error is-",error);
         reject(error);
       } else {
-        console.log(result);
+        // console.log(result);
         resolve(result);
       }
     });
   });
 };
-console.log(" 2. db schema file working properly");
+// console.log(" 2. db schema file working properly");
 module.exports = {executeQuery , con};
