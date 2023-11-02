@@ -20,7 +20,7 @@ VALUES ('Completed', true);
 INSERT INTO status_master (status, is_active)
 VALUES ('Done', true);
 INSERT INTO status_master (status, is_active)
-VALUES ('In Progress', true);SELECT * FROM trainee_trainer_techSELECT * FROM user
+VALUES ('In Progress', true);
 INSERT INTO status_master (status, is_active)
 VALUES ('Delayed', true);
 INSERT INTO status_master (status, is_active)

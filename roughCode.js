@@ -327,3 +327,8 @@ http://localhost:9090/user/reset/Swaraj@gmail.com/eyJhbGciOiJIUzI1NiIsInR5cCI6Ik
 //       res.status(500).send("Internal Server Error");
 //   }
 // }
+
+
+// Pending tasks are 
+// following proper casing 
+// 

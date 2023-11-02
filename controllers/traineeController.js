@@ -1,102 +1,90 @@
-const {getTrainee, getStatusQuery , getTraineeDetailsQuery, updateActivityForUserQuery, markAsReviewedQuery, getTraineesDetailsForStatusQuery, getStatusDropdownQuery} = require('../models/traineeModel.js');
-const {getTrainee, getStatusQuery , getTraineeDetailsQuery, updateActivityForUserQuery, markAsReviewedQuery, getTraineesDetailsForStatusQuery, getStatusDropdownQuery} = require('../models/traineeModel.js');
-const { getActivitiesByTechnologyController } = require('./activitiesController.js');
+const {getTrainee, getStatusQuery , getTraineeDetailsQuery, markAsReviewedQuery, getTraineesDetailsForStatusQuery, getStatusDropdownQuery} = require('../models/traineeModel.js');
+const {executeQuery} = require('../db_config/db_schema.js')
 
-const getTraineeController = async(_ , res) =>{
+// 5 . Get Trainee & Trainer Dropdown - Admin Page
+const getTraineeCtrl = async(_ , res) =>{
     try {
         const results = await getTrainee();
-        return res.send(results);
+        if (!results.error) {
+            return res.send(results);
+        }
+        return res.send({error: true, errorMessage: results.errorMessage})
     } catch (error) {
-        console.error("Error in get Trainee controller..:", error);
+        console.error("Error in get Trainee Ctrl..:", error);
         res.status(500).send("Internal Server Error");
     }
 }
-// Get all the details of trainee like Name of trainee, trained by, activities information, completion percentage, start and end date
-const getTraineeDetailsController = async(req, res) =>{
-    try{
-        const results = await getTraineeDetailsQuery(req.params);
-        return res.send(results);
-    }catch(error){
-        console.error("Error in get Trainee controller..:", error);
-        res.status(500).send("Internal Server Error");
-    }
-}
-
-const getStatusController = async (req , res)=>{
+// 8 .View Status Dropdown - Trainees Page - All 6 options  
+const getStatusCtrl = async (_ , res)=>{
     try {
         const results = await getStatusQuery();
-        if (results.success) {
+        if (!results.error) {
             return res.send(results);
         }
-        return res.send({error: true,errorMessage: results.errorMessage})
+        return res.send({error: true, errorMessage: results.errorMessage})
     } catch (error) {
-        console.error("Error in get Status controller..:", error);
+        console.error("Error in get Status Ctrl..:", error);
         res.status(500).send("Internal Server Error");
     }
 }
-const getActiveOrNotController = async (req, res)=>{
-    try {
-        let params = {
-            activityType: req.query.activityType
-        }
-        const results = await getTraineeDetailsQuery(params);
-        if (results.success) {
-            return res.send(results);
-        }
-        return res.send({error: true,errorMessage: results.errorMessage})
-    } catch (error) {
-        console.error("Error in get Trainee details controller..:", error);
-        res.status(500).send("Internal Server Error"); 
-    }
-}
-const updateActivityForUserController = async(req , res)=>{
-    try {
-        const results = await updateActivityForUserQuery(req.body)
-        if (results.success) {
-            return res.send(results);
-        }
-        return res.send({error: true,errorMessage: results.errorMessage});
-    } catch (error) {
-        console.error("Error in get Trainee details controller..:", error);
-        res.status(500).send("Internal Server Error"); 
-    }
-}
 
-const markAsReviewedController = async(req , res)=>{
+// 9 .Mark As Reviewed tab - Trainees Page 
+const markAsReviewedCtrl = async(req , res)=>{
     try {
         const results = markAsReviewedQuery(req.body.training_plan_id);
-        if (results.success) {
+        if (!results.error) {
             return res.send(results);
         }
-        return res.send({error: true,errorMessage: results.errorMessage}) 
+        return res.send({error: true, errorMessage: results.errorMessage}) 
     } catch (error) {
-        console.error("Error in markAsReviewedControllerr..:", error);
+        console.error("Error in markAsReviewedCtrlr..:", error);
         res.status(500).send("Internal Server Error"); 
     }
 }
-
+// 14 . View Status for trainee - Training Page 
 const getTraineesDetailsForStatusCtrl = async(req, res)=>{
     try {
         const results = await getTraineesDetailsForStatusQuery(req.params);
-        if (results.success) {
+        if (!results.error) {
             return res.send(results);
         }
-        return res.send({error: true,errorMessage: results.errorMessage})
+        return res.send({error: true, errorMessage: error.message})
     } catch (error) {
-        console.error("Error in view Status Controller :", error);
+        console.error("Error in view Status Ctrl :", error);
         res.status(500).send("Internal Server Error"); 
     }
 }
-const getStatusDropdownCtrl = async(req , res)=>{
+// 11 . Trainee Details which are active or old - Trainees Page  
+const getActiveOrNotCtrl = async (req, res) => {
     try {
-        const results = await getStatusDropdownQuery();
-        if (results.success) {
+        const selectQuery = `SELECT * FROM users WHERE is_admin = 1 AND user_id = ? `;
+        let user_id = req.user.user_id;
+        const adminExists =  await executeQuery(selectQuery, user_id);
+        if(adminExists.length > 0){
+            user_id = null;
+        }       
+        const results = await getTraineeDetailsQuery([req.query.activityType , user_id]);
+        if (!results.error) {
             return res.send(results);
         }
-        return res.send({error: true,errorMessage: results.errorMessage})
+        return res.send({ error: true, errorMessage: results.errorMessage });
     } catch (error) {
-        console.error("Error in get Status Dropdown controller..:", error);
+        console.error("Error in get Trainee details Ctrl..:", error);
         res.status(500).send("Internal Server Error");
     }
 }
-module.exports = {getTraineeController  , getTraineeDetailsController , getStatusController , getActiveOrNotController , updateActivityForUserController , markAsReviewedController , getTraineesDetailsForStatusCtrl , getStatusDropdownCtrl};
+
+// 12 . Status Dropdown for Edit Activity - Training Page - Only 3 options  
+const getStatusDropdownCtrl = async(req , res)=>{
+    try {
+        const results = await getStatusDropdownQuery();
+        if (!results.error) {
+            return res.send(results);
+        }
+        return res.send({error: true, errorMessage: results.errorMessage})
+    } catch (error) {
+        console.error("Error in get Status Dropdown Ctrl..:", error);
+        res.status(500).send("Internal Server Error");
+    }
+}
+module.exports = {getTraineeCtrl  , getStatusCtrl , getActiveOrNotCtrl , markAsReviewedCtrl , getTraineesDetailsForStatusCtrl , getStatusDropdownCtrl ,  getActiveOrNotCtrl};
