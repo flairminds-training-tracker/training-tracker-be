@@ -1,5 +1,7 @@
 const con  = require('../db_config/db_connection.js')
-const queries = [
+var executeQuery = ()=>{}
+if (con) {
+    const queries = [
       `CREATE TABLE IF NOT EXISTS users (
         user_id INT NOT NULL AUTO_INCREMENT,
         user_name VARCHAR(255) NOT NULL,
@@ -111,21 +113,21 @@ const queries = [
         FOREIGN KEY (added_by) REFERENCES users (user_id)
       ); 
   `,
-];
+  ];
 
-try {
+  try {
   con.query(queries.join(""), (error) => {
     if (error) throw error;
     // console.log("Schema created successfully");
   });
-} catch (error) {
+  } catch (error) {
   if (error.code === "ER_BAD_DB_ERROR") {
     console.error("Database 'Training_Tracker' does not exist. Please create it.");
   } else {
     console.error(error);
   }
-}
-const executeQuery = (query,params = []) => {
+  }
+  executeQuery = (query,params = []) => {
   return new Promise((resolve, reject) => {
     con.query(query, params, (error, result) => {
       if (error) {
@@ -137,6 +139,8 @@ const executeQuery = (query,params = []) => {
       }
     });
   });
-};
+  };
+}
+
 // console.log(" 2. db schema file working properly");
 module.exports = {executeQuery , con};
