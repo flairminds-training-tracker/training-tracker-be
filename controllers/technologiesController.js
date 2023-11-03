@@ -1,30 +1,71 @@
-const { assignTechnologyQuery , getTechnology } = require('../models/technologiesModel.js');
-     
-const assignTechnology = async (req, res) => {
-            try {
-            const { trainee_id, trainer_id, tech_id, tech_topic_id, tech_sub_topic_id, activity_id, due_date , start_date , end_date, status_id, required,  created_by, modified_by , ttt_id , comment_id} = req.body;
-            const now = new Date();
-            const trainee_trainer_tech_table =[trainee_id ,trainer_id ,tech_id];
-            const training_plan_table = [ttt_id , activity_id ,due_date ,start_date, end_date , status_id ,comment_id , created_by , now ,  required , modified_by , now];
-            const results = await assignTechnologyQuery(trainee_trainer_tech_table, training_plan_table);
-            if (results.error) {
-                return res.send({error: true, message: results.error})
-              }
-            console.log("Technology assigned to the user");
-            res.send("Technology assigned to the user");
-        } catch (error) {
-            console.error(error);
-            res.status(500).send("Unable to register");
-        }
-}
-const getTechnologyController = async(req , res) =>{
+const {  getTechnology, getMyTrainingQuery , allActivitiesSummationQuery , traineesDashboardQuery , completionPercentageQuery} = require('../models/technologiesModel.js');
+
+// 4 .Get Technology Dropdown - Admin Page
+const getTechnologyCtrl = async(_ , res) =>{
     try {
         const results = await getTechnology();
-        console.log(results);
-        res.send(results);
+        if (!results.error) {
+            return res.send(results);
+        }
+        return res.send({error: true,errorMessage: results.errorMessage})
     } catch (error) {
-        console.error("Error in get technology controller..:", error);
+        console.error("Error in get technology Ctrl..:", error);
         res.status(500).send("Internal Server Error");
     }
 }
-module.exports = { assignTechnology , getTechnologyController };
+// My training part for dashboard page 
+const getMyTrainingCtrl = async(req , res)=>{
+    try {
+        const results =  await getMyTrainingQuery([req.user.user_id , req.body.tech_id]);
+        if (!results.error) {
+            return res.send(results);
+        }
+        return res.send({error: true,errorMessage: results.errorMessage})
+    } catch (error) {
+        console.error("Error in Get My training plan..:", error);
+        res.status(500).send("Internal Server Error");
+    }
+}
+const allActivitiesSummationCtrl = async(req , res)=>{
+    try {
+        const results = await allActivitiesSummationQuery();
+        if (!results.error) {
+            let tempResults = results
+            // iterate through results to create new object for 'All'
+            
+            // append that object in results
+            return res.send(tempResults);
+        }
+        return res.send({error: true,errorMessage: results.errorMessage})
+    } catch (error) {
+        console.error("Error in Get allActivitiesSummationCtrl ..:", error);
+        res.status(500).send("Internal Server Error");
+    }
+}
+const traineesDashboardCtrl = async(req , res) =>{
+    try {
+        const results = await traineesDashboardQuery(req.user.user_id);
+        if (!results.error) {
+            return res.send(results);
+        }
+        return res.send({error: true,errorMessage: results.errorMessage})
+    } catch (error) {
+        console.error("Error in Get traineesDashboardCtrl ..:", error);
+        res.status(500).send("Internal Server Error");
+    }
+}
+
+const completionPercentageCtrl = async(req , res)=>{
+    try {
+        const results = await completionPercentageQuery([req.user.user_id , req.body.tech_id]); 
+        if (!results.error) {
+            return res.send(results);
+        }
+        return res.send({error: true,errorMessage: results.errorMessage})
+    } catch (error) {
+        console.error("Error in Get traineesDashboardCtrl ..:", error);
+        res.status(500).send("Internal Server Error");
+    }
+}
+
+module.exports = { getTechnologyCtrl  , getMyTrainingCtrl , allActivitiesSummationCtrl , traineesDashboardCtrl , completionPercentageCtrl};

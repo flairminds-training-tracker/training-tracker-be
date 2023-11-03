@@ -1,19 +1,12 @@
 const express = require("express");
-const {userRegistration , userLogin, changePassword, loggedUser, sendPasswordResetEmail, userPasswordReset} = require('../controllers/userController.js');
+const {addUser, userLogin} = require('../controllers/userController.js');
 const { adminAuthMiddleware } = require('../middlewares/adminMiddleware.js');
-const { userAuthMiddleware } = require("../middlewares/userMiddleware.js");
 const userRouter = express.Router();
 
 // public routes
-userRouter.post('/addUser', userRegistration);
+// 1 . add user API - Admin Page 
+userRouter.post('/addUser', adminAuthMiddleware, addUser);
+// 2 . user login API - Admin Page 
 userRouter.post('/login', userLogin);
-// userRouter.post('/resetPasswordEmail', sendPasswordResetEmail);
-// userRouter.post('/resetPassword/:id/:token', userPasswordReset);
-
-
-// protected routes
-userRouter.post('/changePassword',changePassword );
-userRouter.get('/loggedUser',userAuthMiddleware, loggedUser);
-
 
 module.exports = { userRouter };
