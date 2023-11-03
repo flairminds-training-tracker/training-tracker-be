@@ -18,7 +18,31 @@ const getMyTrainingCtrl = async(req , res)=>{
     try {
         const results =  await getMyTrainingQuery([req.user.user_id , req.body.tech_id]);
         if (!results.error) {
-            return res.send(results);
+            let tempResults = results;
+
+            let totalCompleted = 0;
+            let totalInProgress = 0;
+            let totalNotStarted = 0;
+            let totalDelayed = 0;
+
+            tempResults.forEach((result) => {
+                totalCompleted += result.completed;
+                totalInProgress += result.in_progress;
+                totalNotStarted += result.not_started;
+                totalDelayed += result.delayed_;
+            });
+
+            const allObject = {
+                technology: 'All',
+                completed: totalCompleted,
+                in_progress: totalInProgress,
+                not_started: totalNotStarted,
+                delayed_: totalDelayed,
+                percentage_of_activities: 0 
+            };
+            tempResults.push(allObject);
+
+            return res.send(tempResults);
         }
         return res.send({error: true,errorMessage: results.errorMessage})
     } catch (error) {
