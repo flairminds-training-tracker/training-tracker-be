@@ -8,7 +8,7 @@ const {logger , infoLogger , errorLogger} = require('../logger/logger.js');
 const addUser = async (req, res) => {
     var { user_name, email, password, is_admin } = req.body;
 
-    if (!(user_name , email && password)) {
+    if (!(user_name && email && password)) {
         // infoLogger.info({timestamp: new Date(),ipaddress: req.ip,method: req.method,endpoint: req.url,responseTime: res.responseTime || 'N/A',req: req.body,res: res.body});
         errorLogger.error();
         return res.send("All fields are necessary...");
