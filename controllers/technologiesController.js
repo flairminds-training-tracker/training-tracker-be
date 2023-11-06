@@ -16,7 +16,7 @@ const getTechnologyCtrl = async(_ , res) =>{
 // My training part for dashboard page 
 const getMyTrainingCtrl = async(req , res)=>{
     try {
-        const results =  await getMyTrainingQuery([req.user.user_id , req.body.tech_id]);
+        const results =  await getMyTrainingQuery([req.user.user_id]);
         if (!results.error) {
             let tempResults = results;
 
@@ -41,7 +41,6 @@ const getMyTrainingCtrl = async(req , res)=>{
                 percentage_of_activities: 0 
             };
             tempResults.push(allObject);
-
             return res.send(tempResults);
         }
         return res.send({error: true,errorMessage: results.errorMessage})
@@ -54,10 +53,6 @@ const allActivitiesSummationCtrl = async(req , res)=>{
     try {
         const results = await allActivitiesSummationQuery();
         if (!results.error) {
-            let tempResults = results
-            // iterate through results to create new object for 'All'
-            
-            // append that object in results
             return res.send(tempResults);
         }
         return res.send({error: true,errorMessage: results.errorMessage})

@@ -37,7 +37,7 @@ const saveTpModel = async(params, user_id) => {
         const selectQuery = `SELECT * FROM trainee_trainer_tech WHERE tech_id = ? AND trainee_id = ? AND trainer_id = ?`
         const results  = await executeQuery(selectQuery, [tech_id , trainee_id , trainer_id]);
         if(results.length > 0){
-            return "Data cannot be inserted...";
+            return "Already data has been saved.Add another data...";
         } 
         const insertQueryTTT = `INSERT INTO trainee_trainer_tech (tech_id, trainee_id, trainer_id, created_by) VALUES (?, ?, ?, ?)`;
         const traineeTrainerTechResults = await executeQuery(insertQueryTTT, paramsForTTT);
