@@ -11,7 +11,7 @@ trainingPlanRouter.post('/saveActivities',adminAuthMiddleware, saveTpCtrl);
 trainingPlanRouter.post('/updateTrainingPlan',userAuthMiddleware, updateTrainingActCtrl)
 
 // 14 . My Activities -Training Page 
-trainingPlanRouter.get('/getTrainingActivities',userAuthMiddleware, getTrainingActCtrl);
+trainingPlanRouter.post('/getTrainingActivities',userAuthMiddleware, getTrainingActCtrl);
 
 trainingPlanRouter.post('/updateCommentStatus',userAuthMiddleware, updateCommentStatusCtrl)
 module.exports = {trainingPlanRouter};
