@@ -2,15 +2,12 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { addUserQuery, userExists } = require("../models/userModel.js");
 const {executeQuery} = require('../db_config/db_schema.js');
-const {logger , infoLogger , errorLogger} = require('../logger/logger.js');
 
 // 1 . add user API - Admin Page 
 const addUser = async (req, res) => {
     var { user_name, email, password, is_admin } = req.body;
 
     if (!(user_name && email && password)) {
-        // infoLogger.info({timestamp: new Date(),ipaddress: req.ip,method: req.method,endpoint: req.url,responseTime: res.responseTime || 'N/A',req: req.body,res: res.body});
-        errorLogger.error();
         return res.send("All fields are necessary...");
     } 
     try {

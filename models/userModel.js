@@ -13,6 +13,4 @@ const userExists = (email)=>{
     return executeQuery(query , params);
 }
 
-// console.log("User model working fine");
-
 module.exports = {addUserQuery , userExists };

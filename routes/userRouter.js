@@ -9,4 +9,8 @@ userRouter.post('/addUser', adminAuthMiddleware, addUser);
 // 2 . user login API - Admin Page 
 userRouter.post('/login', userLogin);
 
+userRouter.get('/',(req, res)=>{
+    return res.send("Welcome to training tracker backend...");
+})
+
 module.exports = { userRouter };

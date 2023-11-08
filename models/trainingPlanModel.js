@@ -37,7 +37,7 @@ const saveTpModel = async(params, user_id) => {
         const selectQuery = `SELECT * FROM trainee_trainer_tech WHERE tech_id = ? AND trainee_id = ? AND trainer_id = ?`
         const results  = await executeQuery(selectQuery, [tech_id , trainee_id , trainer_id]);
         if(results.length > 0){
-            return "Already data has been saved.Add another data...";
+            return  {isDuplicate : true , success: false ,message: "Data CANNOT be inserted successfully into both tables."};
         } 
         const insertQueryTTT = `INSERT INTO trainee_trainer_tech (tech_id, trainee_id, trainer_id, created_by) VALUES (?, ?, ?, ?)`;
         const traineeTrainerTechResults = await executeQuery(insertQueryTTT, paramsForTTT);
@@ -59,7 +59,7 @@ const saveTpModel = async(params, user_id) => {
             throw trainingPlanResult .error; 
         }
         await commitTransaction();
-        return {success: true,message: "Data inserted successfully into both tables."};
+        return {isDuplicate : false , success: true,message: "Data inserted successfully into both tables."};
     } catch (error) {
         console.error("Error in saveTpModel:", error);
         await rollbackTransaction(error); 
@@ -134,37 +134,32 @@ const updateCommentStatusModel= async(params) =>{
 const getTrainingActModel = async(params) => {
     try {
         let selectQuery = `SELECT tp.training_plan_id, 
-            tm.technology AS tech,am.activity AS activity_name, ttm.topic AS topic_name,tst.sub_topic AS sub_topic_name , 
-            tp.start_date AS start_date, tp.due_date AS due_date,
-            tp.end_date AS end_date, c.comment AS comments,
-            am.resource_link AS resource_link, am.description AS activity_description, 
-            sm.status AS status_name 
-        FROM 
-            training_plan AS tp 
-            INNER JOIN activities_master AS am ON tp.activity_id = am.activity_id 
-            INNER JOIN tech_sub_topics_master AS tst ON am.sub_topic_id = tst.tech_sub_topic_id 
-            INNER JOIN tech_topics_master AS ttm ON tst.tech_topic_id = ttm.tech_topic_id
-            INNER JOIN technologies_master AS tm ON ttm.tech_id = tm.tech_id
-            LEFT JOIN comments AS c ON tp.training_plan_id = c.training_plan_id
-            INNER JOIN status_master AS sm ON tp.status_id = sm.status_id
-            INNER JOIN trainee_trainer_tech AS ttt ON tp.ttt_id = ttt.ttt_id
-            INNER JOIN users AS u ON ttt.trainee_id = u.user_id
-        WHERE 
-            ttt.trainee_id = ?`;
-
+        tm.technology AS tech , am.activity AS activity_name, 
+        ttm.topic AS topic_name, tst.sub_topic AS sub_topic_name , 
+        DATE_FORMAT(tp.start_date, '%Y-%m-%d') AS start_date,DATE_FORMAT(tp.due_date, '%Y-%m-%d') AS due_date,
+        DATE_FORMAT(tp.end_date, '%Y-%m-%d') AS end_date,  c.comment AS comments,
+        am.resource_link AS resource_link, am.description AS activity_description, sm.status_display AS status_name 
+    FROM training_plan AS tp 
+        INNER JOIN activities_master AS am ON tp.activity_id = am.activity_id 
+        INNER JOIN tech_sub_topics_master AS tst ON am.sub_topic_id = tst.tech_sub_topic_id 
+        INNER JOIN tech_topics_master AS ttm ON tst.tech_topic_id = ttm.tech_topic_id
+        INNER JOIN technologies_master AS tm ON ttm.tech_id = tm.tech_id
+        LEFT JOIN comments AS c ON tp.training_plan_id = c.training_plan_id
+        INNER JOIN status_master AS sm ON tp.status_id = sm.status_id
+        INNER JOIN trainee_trainer_tech AS ttt ON tp.ttt_id = ttt.ttt_id
+        INNER JOIN users AS u ON ttt.trainee_id = u.user_id
+    WHERE 
+        ttt.trainee_id = ?
+    `;
         console.log(params);
         if (params.length > 1 && params[1] !== -1) {
             selectQuery += ` AND tp.status_id = ?`;
         }
-
         const trainingActResults = await executeQuery(selectQuery, params);
-
         if (trainingActResults.error) {
             return {error: true, errorMessage: trainingActResults.error}
         }
-
         return trainingActResults;
-
     } catch (error) {
         return {success: false, error: true, errorMessage: error.message}
     }

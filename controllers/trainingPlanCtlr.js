@@ -40,17 +40,26 @@ const updateCommentStatusCtrl = async(req,res) =>{
 }
 
 // 14 . My Activities -Training Page 
-const getTrainingActCtrl = async(req, res) =>{ // controller
+const getTrainingActCtrl = async (req, res) => {
     try {
-        const results = await getTrainingActModel([req.user.user_id , req.body.status_id]);
-        if (!results.error) {
-            return res.send(results);
+        const results = await getTrainingActModel([req.user.user_id, req.body.status_id]);
+        if (results.error) {
+            return res.send({ error: true, errorMessage: results.errorMessage });
         }
-        return res.send({error: true, errorMessage: results.errorMessage})
-
+        const formattedData = {};
+        for (const row of results) {
+            const { tech, topic_name, sub_topic_name, activity_name, start_date, due_date, end_date, comments, resource_link, activity_description, status_name } = row;
+            if (!formattedData[tech]) {
+                formattedData[tech] = [];
+            }
+            formattedData[tech].push({
+                activity_name,topic_name,sub_topic_name,start_date, due_date, end_date,comments,resource_link,               activity_description,status_name
+            });
+        }
+        return res.send(formattedData);
     } catch (error) {
         console.error("Exception in get training activities controller", error);
-        res.status(500).send("Internal Server Error");        
+        res.status(500).send("Internal Server Error");
     }
 }
 module.exports = {saveTpCtrl,  updateTrainingActCtrl, updateCommentStatusCtrl , getTrainingActCtrl}

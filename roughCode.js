@@ -332,3 +332,64 @@ http://localhost:9090/user/reset/Swaraj@gmail.com/eyJhbGciOiJIUzI1NiIsInR5cCI6Ik
 // Pending tasks are 
 // following proper casing 
 // 
+// Ask regarding this to Punit Sir 
+// WITH cte AS (
+//   SELECT
+//       (SELECT COUNT(*) FROM training_plan WHERE status_id = 4 AND ttt.trainer_id = ?) AS completed,
+//       (SELECT COUNT(*) FROM training_plan WHERE status_id = 2 AND ttt.trainer_id = ?) AS in_progress,
+//       (SELECT COUNT(*) FROM training_plan WHERE status_id = 1 AND ttt.trainer_id = ?) AS not_started,
+//       (SELECT COUNT(*) FROM training_plan WHERE status_id = 5 AND ttt.trainer_id = ?) AS delayed_
+// )
+
+// SELECT completed, in_progress, not_started, delayed_
+// FROM cte;
+
+
+// DONT NEED AT THIS MOMENT 
+// Working good - 
+// const allActivitiesSummationQuery = ()=>{
+//   const query = `WITH cte AS (
+//       SELECT
+//           (SELECT COUNT(*) FROM training_plan WHERE status_id = 4) AS completed,
+//           (SELECT COUNT(*) FROM training_plan WHERE status_id = 2) AS in_progress,
+//           (SELECT COUNT(*) FROM training_plan WHERE status_id = 1) AS not_started,
+//           (SELECT COUNT(*) FROM training_plan WHERE status_id = 5) AS delayed_,
+//           ((SELECT COUNT(*) FROM training_plan WHERE status_id = 4) / COUNT(*) * 100) AS completion_percentage
+//       FROM
+//           technologies_master t
+//           LEFT JOIN trainee_trainer_tech ttt ON t.tech_id = ttt.tech_id
+//           LEFT JOIN training_plan tp ON ttt.ttt_id = tp.ttt_id
+//   )
+//   SELECT completed, in_progress, not_started, delayed_, completion_percentage
+//   FROM cte;`;
+//   return executeQuery(query);
+// }
+[
+  {
+      "technology": "Python",
+      "completed": 3,
+      "in_progress": 1,
+      "not_started": 13,
+      "delayed_": 0,
+      "not_reviewed": 1,
+      "percentage_of_activities": 8.571428571428571
+  },
+  {
+      "technology": "Java",
+      "completed": 5,
+      "in_progress": 0,
+      "not_started": 9,
+      "delayed_": 0,
+      "not_reviewed": 3,
+      "percentage_of_activities": 14.285714285714285
+  },
+  {
+      "technology": "All",
+      "completed": 8,
+      "in_progress": 1,
+      "not_started": 22,
+      "delayed_": 0,
+      "not_reviewed": 4,
+      "percentage_of_completed_activities": 22.857142857142858
+  }
+]

@@ -292,3 +292,46 @@ const updatePassword = async (newPasswordHash , email) =>{
         throw error;
     }
 }
+
+// API 12
+// 8 .View Status Dropdown - Trainees Page - All 6 options
+traineeRouter.get('/getStatus', userAuthMiddleware,getStatusCtrl);
+const getStatusCtrl = async (_ , res)=>{
+    try {
+        const results = await getStatusQuery();
+        if (!results.error) {
+            return res.send(results);
+        }
+        return res.send({error: true, errorMessage: results.errorMessage})
+    } catch (error) {
+        console.error("Error in get Status Ctrl..:", error);
+        res.status(500).send("Internal Server Error");
+    }
+}
+const getStatusQuery = () =>{
+    const query = `SELECT -1 as status_id, 'All' as status UNION ALL SELECT status_id, status FROM status_master`
+    return executeQuery(query);
+}
+
+// API 13
+technologyRouter.post('/completionPercentage',userAuthMiddleware , completionPercentageCtrl);
+const compxletionPercentageCtrl = async(req , res)=>{
+    try {
+        const results = await completionPercentageQuery([req.user.user_id , req.body.tech_id]); 
+        if (!results.error) {
+            return res.send(results);
+        }
+        return res.send({error: true,errorMessage: results.errorMessage})
+    } catch (error) {
+        console.error("Error in Get traineesDashboardCtrl ..:", error);
+        res.status(500).send("Internal Server Error");
+    }
+}
+const completionPercentageQuery = ([user_id , tech_id])=>{
+    const query = `SELECT
+    (SUM(CASE WHEN tp.status_id =(SELECT status_id FROM status_master WHERE status='completed') THEN 1 ELSE 0 END) / COUNT(*)) * 100 AS percentage_of_completed_activities
+    FROM trainee_trainer_tech ttt  JOIN technologies_master t ON ttt.tech_id = t.tech_id
+    JOIN training_plan tp ON ttt.ttt_id = tp.ttt_id 
+    WHERE  ttt.trainee_id = ? AND ttt.tech_id = ?;`;
+    return executeQuery(query , [user_id , tech_id]);
+}
