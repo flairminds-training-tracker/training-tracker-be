@@ -16,7 +16,7 @@ const getActivitiesByTechnologyCtrl = async(req, res)=>{
 }
 const setStatusForEditActivityCtrl = async(req , res)=>{
     try {
-        const results =await setStatusEditActivityQuery();
+        const results = await setStatusEditActivityQuery();
         if (!results.error) {
             return res.send(results);
         }

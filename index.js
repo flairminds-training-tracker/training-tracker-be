@@ -14,6 +14,7 @@ const port = process.env.PORT || 9090;
 app.use(cors({origin: true,credentials: true}));
 app.use(express.json());
 
+// comment
 app.use("/user", userRouter);
 app.use("/tech", technologyRouter);
 app.use("/acti", activitiesRouter);

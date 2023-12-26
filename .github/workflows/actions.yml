@@ -1,14 +1,20 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+name: Code push
+run-name: changes made by ${{ github.actor }}
+on:
+  pull_request:
+    branches: [main, develop]
 
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['16.x', '18.x']
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - run: echo "Event - ${{ github.event_name }}"
+      - run: echo "Server - ${{ runner.os }}"
+      - run: echo "Branch - ${{ github.ref }}"
+      - run: echo "Repository - ${{ github.repository }}"
       - name: Check out repository code
         uses: actions/checkout@v4
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
@@ -16,4 +22,7 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
+      - name: Install dependencies
+        run: npm ci
+      - run: npm run build --if-present
       - run: echo "🍏 This job's status is ${{ job.status }}."

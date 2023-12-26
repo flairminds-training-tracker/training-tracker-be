@@ -1,9 +1,9 @@
 const con  = require('../db_config/db_connection.js')
-var executeQuery = ()=>{}
+// var executeQuery = ()=>{}
 if (con) {
     const queries = [
-      `CREATE TABLE IF NOT EXISTS users (
-        user_id INT NOT NULL AUTO_INCREMENT,
+    	`CREATE TABLE IF NOT EXISTS users (
+    	user_id INT NOT NULL AUTO_INCREMENT,
         user_name VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL,
         password TEXT NOT NULL,
@@ -111,35 +111,34 @@ if (con) {
         PRIMARY KEY (comment_id),
         FOREIGN KEY (training_plan_id) REFERENCES training_plan(training_plan_id),
         FOREIGN KEY (added_by) REFERENCES users (user_id)
-      ); 
-  `,
-  ];
+      );`,
+  	];
 
-  try {
-  con.query(queries.join(""), (error) => {
-    if (error) throw error;
-    // console.log("Schema created successfully");
-  });
-  } catch (error) {
-  if (error.code === "ER_BAD_DB_ERROR") {
-    console.error("Database 'Training_Tracker' does not exist. Please create it.");
-  } else {
-    console.error(error);
-  }
-  }
-  executeQuery = (query,params = []) => {
-  return new Promise((resolve, reject) => {
-    con.query(query, params, (error, result) => {
-      if (error) {
-        console.log("The error is-",error);
-        reject(error);
-      } else {
-        // console.log(result);
-        resolve(result);
-      }
-    });
-  });
-  };
+	try {
+		con.query(queries.join(""), (error) => {
+			if (error) throw error;
+			// console.log("Schema created successfully");
+		});
+	} catch (error) {
+		if (error.code === "ER_BAD_DB_ERROR") {
+			console.error("Database 'Training_Tracker' does not exist. Please create it.");
+		} else {
+			console.error(error);
+		}
+	}
+	var executeQuery = (query,params = []) => {
+		return new Promise((resolve, reject) => {
+			con.query(query, params, (error, result) => {
+			if (error) {
+				console.log("The error is-",error);
+				reject(error);
+			} else {
+				// console.log(result);
+				resolve(result);
+			}
+			});
+		});
+	};
 }
 
 // console.log(" 2. db schema file working properly");

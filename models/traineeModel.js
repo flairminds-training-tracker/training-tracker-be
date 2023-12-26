@@ -22,10 +22,8 @@ const getTraineeDetailsQuery = ([activityType , user_id]) => {
             tech.technology AS technology,
             DATE_FORMAT(tp.start_date, '%Y-%m-%d') AS start_date ,
             DATE_FORMAT(tp.due_date, '%Y-%m-%d') AS due_Date 
-        FROM trainee_trainer_tech ttt
-        JOIN users u1 ON ttt.trainee_id = u1.user_id
-        JOIN users u2 ON ttt.trainer_id = u2.user_id
-        JOIN technologies_master tech ON ttt.tech_id = tech.tech_id
+        FROM trainee_trainer_tech ttt JOIN users u1 ON ttt.trainee_id = u1.user_id
+        JOIN users u2 ON ttt.trainer_id = u2.user_id    JOIN technologies_master tech ON ttt.tech_id = tech.tech_id
         LEFT JOIN training_plan tp ON ttt.ttt_id = tp.ttt_id
         LEFT JOIN comments c ON tp.training_plan_id = c.training_plan_id
         GROUP BY u1.user_name, u2.user_name, tech.technology
