@@ -4,8 +4,7 @@ const { executeQuery } = require("../db_config/db_schema.js");
 const getActivitiesByTechnologyQuery = async(params)=>{
     try {
         const {tech_id} = params;
-        const selectQuery = `SELECT tm.tech_id , tm.technology AS technology,ttm.tech_topic_id , ttm.topic AS topic,
-        tst.tech_sub_topic_id , tst.sub_topic AS sub_topic,
+        const selectQuery = `SELECT tm.tech_id , tm.technology AS technology,ttm.tech_topic_id , ttm.topic AS topic, tst.tech_sub_topic_id , tst.sub_topic AS sub_topic,
         am.activity_id , am.activity AS activity
         FROM technologies_master tm LEFT JOIN tech_topics_master 
         ttm ON tm.tech_id = ttm.tech_id
@@ -27,4 +26,4 @@ const setStatusEditActivityQuery =async()=>{
     }
 }
 
-module.exports = { getActivitiesByTechnologyQuery , setStatusEditActivityQuery}
+module.exports = { getActivitiesByTechnologyQuery, setStatusEditActivityQuery }
