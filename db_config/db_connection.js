@@ -1,6 +1,6 @@
 let db_con = false
 try {
-  const mysql = require("mysql");
+  const mysql = require("mysql2");
   require('dotenv').config();
 
   const con = mysql.createConnection({

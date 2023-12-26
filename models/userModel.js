@@ -7,10 +7,10 @@ const addUserQuery = (user_name,email , password , is_admin , createdAt) => {
     return executeQuery(query , params);
 }
 // 1 . add user API - Admin Page
-const userExists = (email)=>{
+const userExists = async (email)=>{
     const query = `SELECT * FROM users WHERE email = ?`;
     const params = email;
-    return executeQuery(query , params);
+    return await executeQuery(query , params);
 }
 
 module.exports = {addUserQuery , userExists };

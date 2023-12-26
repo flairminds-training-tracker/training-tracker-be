@@ -1,32 +1,34 @@
 const { executeQuery } = require("../db_config/db_schema.js");
 const {con} = require('../db_config/db_schema.js');
-const beginTransaction = () => {
-    return new Promise((resolve, reject) => {
-        con.beginTransaction((err) => {
-            if (err) {
-                reject(err);
-            }
-            resolve();
-        });
-    });
-};
-const commitTransaction = () => {
-    return new Promise((resolve, reject) => {
-        con.commit((err) => {
-            if (err) {
-                reject(err);
-            }
-            resolve();
-        });
-    });
-};
-const rollbackTransaction = (error) => {
-    return new Promise((resolve, reject) => {
-        con.rollback(() => {
-            reject(error);
-        });
-    });
-};
+const {beginTransaction, commitTransaction, rollbackTransaction} = require('../utils/transactionsQueries.js');
+
+// const beginTransaction = () => {
+//     return new Promise((resolve, reject) => {
+//         con.beginTransaction((err) => {
+//             if (err) {
+//                 reject(err);
+//             }
+//             resolve();
+//         });
+//     });
+// };
+// const commitTransaction = () => {
+//     return new Promise((resolve, reject) => {
+//         con.commit((err) => {
+//             if (err) {
+//                 reject(err);
+//             }
+//             resolve();
+//         });
+//     });
+// };
+// const rollbackTransaction = (error) => {
+//     return new Promise((resolve, reject) => {
+//         con.rollback(() => {
+//             reject(error);
+//         });
+//     });
+// };
 // 7 .Save Training Plan - Admin Page 
 const saveTpModel = async(params, user_id) => {
     try {
@@ -115,7 +117,7 @@ const updateTrainingActModel= async(params,user_id) =>{
         return{ success: false,error: true,errorMessage: error.message}
     }
 }
-const updateCommentStatusModel= async(params) =>{
+const updateCommentStatusModel = async(params) =>{
     try {
         const {comment_id}=params
         const updateCommentQuery = `update comments set is_resolved = 1,resolved_on=now() where comment_id = ?`

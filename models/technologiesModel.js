@@ -1,12 +1,12 @@
 const { executeQuery } = require("../db_config/db_schema.js");
 
 // 4 .Get Technology Dropdown - Admin Page
-const getTechnology = () =>{
+const getTechnology = async() =>{
     const query = `SELECT tech_id , technology FROM technologies_master`
-    return executeQuery(query);
+    return await executeQuery(query);
 }
 // My training part for dashboard page 
-const getMyTrainingQuery = ([user_id]) => {
+const getMyTrainingQuery = async([user_id]) => {
     let query = `WITH cte AS ( SELECT  t.technology,
             SUM(CASE WHEN tp.status_id = (SELECT status_id FROM status_master WHERE status = 'completed') THEN 1 ELSE 0 END) AS completed,
             SUM(CASE WHEN tp.status_id = (SELECT status_id FROM status_master WHERE status = 'in_progress') THEN 1 ELSE 0 END) AS in_progress,
@@ -22,10 +22,10 @@ const getMyTrainingQuery = ([user_id]) => {
     )
     SELECT technology, completed, in_progress, not_started, delayed_, not_reviewed, percentage_of_activities FROM cte;
     `;
-        return executeQuery(query, [user_id]);
+        return await executeQuery(query, [user_id]);
 }
 
-
+// all trinees under perticular trainer
 const traineesDashboardQuery = (params)=>{
     const query = ` SELECT
     SUM(CASE WHEN tp.status_id = (SELECT status_id FROM status_master WHERE status='completed') THEN 1 ELSE 0 END) AS completed,

@@ -10,9 +10,10 @@ const getTechnologyCtrl = async(_ , res) =>{
         return res.send({error: true,errorMessage: results.errorMessage})
     } catch (error) {
         console.error("Error in get technology Ctrl..:", error);
-        res.status(500).send("Internal Server Error");
+        res.status(500).send({error : true, message : "Internal Server Error"});
     }
 }
+
 // Boxes with percentage for each box(eg.subject , all etc) 
 const getMyTrainingCtrl = async (req, res) => {
     try {
@@ -56,9 +57,10 @@ const getMyTrainingCtrl = async (req, res) => {
         return res.send({ error: true, errorMessage: results.errorMessage });
     } catch (error) {
         console.error("Error in Get My training plan..:", error);
-        res.status(500).send("Internal Server Error");
+        res.status(500).send({error : true, message : "Internal Server Error"});
     }
 }
+
 const traineesDashboardCtrl = async(req , res) =>{
     try {
         const results = await traineesDashboardQuery(req.user.user_id);
@@ -68,7 +70,7 @@ const traineesDashboardCtrl = async(req , res) =>{
         return res.send({error: true,errorMessage: results.errorMessage})
     } catch (error) {
         console.error("Error in Get traineesDashboardCtrl ..:", error);
-        res.status(500).send("Internal Server Error");
+        res.status(500).send({error : true, message : "Internal Server Error"});
     }
 }
 
