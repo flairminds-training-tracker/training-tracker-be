@@ -1,7 +1,7 @@
 name: Code push
 run-name: changes made by ${{ github.actor }}
-on: 
-  push:
+on:
+  pull_request:
     branches: [main, develop]
 
 jobs:
@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ['14.x', '16.x', '18.x']
+        node-version: ['16.x', '18.x']
     steps:
       - run: echo "Event - ${{ github.event_name }}"
       - run: echo "Server - ${{ runner.os }}"
