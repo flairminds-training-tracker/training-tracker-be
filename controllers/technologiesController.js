@@ -1,5 +1,4 @@
-const { all } = require('axios');
-const {  getTechnology, getMyTrainingQuery , traineesDashboardQuery } = require('../models/technologiesModel.js');
+const {  getTechnology, getMyTrainingQuery  , traineesDashboardQuery , completionPercentageQuery} = require('../models/technologiesModel.js');
 
 // 4 .Get Technology Dropdown - Admin Page
 const getTechnologyCtrl = async(_ , res) =>{
@@ -20,6 +19,7 @@ const getMyTrainingCtrl = async (req, res) => {
         const results = await getMyTrainingQuery([req.user.user_id]);
         if (!results.error) {
             let tempResults = results;
+
             let totalCompleted = 0;
             let totalInProgress = 0;
             let totalNotStarted = 0;
@@ -32,15 +32,14 @@ const getMyTrainingCtrl = async (req, res) => {
                 totalNotStarted += result.not_started;
                 totalDelayed += result.delayed_;
                 totalNotReviewed += result.not_reviewed;
+
             });
+
+            const totalActivities = totalCompleted + totalInProgress + totalNotStarted + totalDelayed + totalNotReviewed;
 
             tempResults.forEach((result) => {
-                const total = result.completed + result.in_progress + result.not_started + result.delayed_ + result.not_reviewed;
-                result.percentage_of_activities = (total !== 0) ? Math.round((result.completed / total) * 100) : 0;
+                result.percentage_of_activities = (result.completed / totalActivities) * 100;
             });
-
-            const allTotal = totalCompleted + totalInProgress + totalNotStarted + totalDelayed + totalNotReviewed;
-
             const allObject = {
                 technology: 'All',
                 completed: totalCompleted,
@@ -48,8 +47,9 @@ const getMyTrainingCtrl = async (req, res) => {
                 not_started: totalNotStarted,
                 delayed_: totalDelayed,
                 not_reviewed : totalNotReviewed,
-                percentage_of_completed_activities: (allTotal !== 0) ? Math.round((totalCompleted / allTotal) * 100) : 0
+                percentage_of_completed_activities: (totalCompleted / totalActivities) * 100
             };
+
             tempResults.push(allObject);
             return res.send(tempResults);
         }
@@ -59,10 +59,6 @@ const getMyTrainingCtrl = async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 }
-
-
-
-
 const traineesDashboardCtrl = async(req , res) =>{
     try {
         const results = await traineesDashboardQuery(req.user.user_id);
@@ -76,4 +72,17 @@ const traineesDashboardCtrl = async(req , res) =>{
     }
 }
 
-module.exports = { getTechnologyCtrl  , getMyTrainingCtrl  , traineesDashboardCtrl};
+const completionPercentageCtrl = async(req , res)=>{
+    try {
+        const results = await completionPercentageQuery([req.user.user_id , req.body.tech_id]); 
+        if (!results.error) {
+            return res.send(results);
+        }
+        return res.send({error: true,errorMessage: results.errorMessage})
+    } catch (error) {
+        console.error("Error in Get traineesDashboardCtrl ..:", error);
+        res.status(500).send("Internal Server Error");
+    }
+}
+
+module.exports = { getTechnologyCtrl  , getMyTrainingCtrl  , traineesDashboardCtrl , completionPercentageCtrl};
