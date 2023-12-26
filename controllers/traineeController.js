@@ -14,6 +14,7 @@ const getTraineeCtrl = async(_ , res) =>{
         res.status(500).send("Internal Server Error");
     }
 }
+
 // 9 .Mark As Reviewed tab - Trainees Page 
 const markAsReviewedCtrl = async(req , res)=>{
     try {
@@ -27,6 +28,7 @@ const markAsReviewedCtrl = async(req , res)=>{
         res.status(500).send("Internal Server Error"); 
     }
 }
+
 // 14 . View Status for trainee - Training Page 
 const getActiveOrNotCtrl = async (req, res) => {
     try {
@@ -60,6 +62,7 @@ const getStatusDropdownCtrl = async(req , res)=>{
         res.status(500).send("Internal Server Error");
     }
 }
+
 const getAllStatusCtrl = async(req , res)=>{
     try {
         const results = await getStatusQuery();
