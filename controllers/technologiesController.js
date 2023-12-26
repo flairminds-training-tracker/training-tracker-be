@@ -83,8 +83,9 @@ const completionPercentageCtrl = async(req , res)=>{
         return res.send({error: true,errorMessage: results.errorMessage})
     } catch (error) {
         console.error("Error in Get traineesDashboardCtrl ..:", error);
-        res.status(500).send("Internal Server Error");
+        res.status(500).send({error : true, message : "Internal Server Error"});
     }
 }
+
 
 module.exports = { getTechnologyCtrl  , getMyTrainingCtrl  , traineesDashboardCtrl , completionPercentageCtrl};
