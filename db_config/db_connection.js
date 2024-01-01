@@ -1,4 +1,4 @@
-let db_con = false
+let dbCon = false
 try {
   const mysql = require("mysql2");
   require('dotenv').config();
@@ -10,7 +10,7 @@ try {
     password: `${process.env.PASSWORD}`,
     database: `${process.env.DATABASE}`,
     port: `${process.env.DATABASE_PORT}`,
-    multipleStatements: true,
+    multipleStatements: true
   });
 
   // Attempt to connect
@@ -19,10 +19,10 @@ try {
       console.error('Error connecting to MySQL:', err);
       return;
     }
-    console.log('Connected to MySQL');
+    console.info('Connected to MySQL');
   });
-  db_con = con
+  dbCon = con;
 } catch (error) {
   console.error('Error setting up MySQL connection:', error);
 }
-module.exports = db_con;
+module.exports = dbCon;
