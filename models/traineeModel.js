@@ -1,12 +1,12 @@
-const {executeQuery} = require('../db_config/db_schema.js');
+const {executeQuery} = require('../db_config/db_schema');
 
 // 5 . Get Trainee & Trainer Dropdown - Admin Page
-const getTrainee =() => {
+const getTrainee = () => {
     const query = `SELECT user_id , user_name FROM users WHERE is_admin = 0`;
     return executeQuery(query);
 }
-// 11 . Trainee Details which are active or old - Trainees Page  
-const getTraineeDetailsQuery = ([activityType , user_id]) => {  
+// 11 . Trainee Details which are active or old - Trainees Page
+const getTraineeDetailsQuery = ([activityType, userId]) => {
     const whereCondition = activityType === 'active'
         ? 'Completed_Activities_Percentage != 100'
         : activityType === 'old'
@@ -29,20 +29,20 @@ const getTraineeDetailsQuery = ([activityType , user_id]) => {
         GROUP BY u1.user_name, u2.user_name, tech.technology
         HAVING ${whereCondition};
     `;
-    return !user_id ? executeQuery(getOldAndActiveActivitiesQuery) : executeQuery(getOldAndActiveActivitiesQuery, [user_id]);
+    return !userId ? executeQuery(getOldAndActiveActivitiesQuery) : executeQuery(getOldAndActiveActivitiesQuery, [userId]);
 };
 
-// 9 .Mark As Reviewed tab - Trainees Page 
-const markAsReviewedQuery = (params)=>{
+// 9 .Mark As Reviewed tab - Trainees Page
+const markAsReviewedQuery = (params) => {
     const query = `UPDATE training_plan SET status_id = (select status_id from status_master where status='completed') WHERE training_plan_id = ? `;
     return executeQuery(query, params);
 }
 
-// 14 . View Status for trainee - Training Page 
+// 14 . View Status for trainee - Training Page
 const getTraineesDetailsForStatusQuery = (params) => {
     const queryParams = [params.status_id, params.trainee_id];
     let whereCondition = '';
-    if(params){
+    if (params) {
         whereCondition = `WHERE sm.status_id = ? AND ttt.trainee_id = ?`;
     }
     const query = `
@@ -69,14 +69,14 @@ const getTraineesDetailsForStatusQuery = (params) => {
     return executeQuery(query, queryParams);
 }
 
-// 12 . Status Dropdown for Edit Activity - Training Page - Only 3 options  
-const getStatusDropdownQuery = (params) =>{
+// 12 . Status Dropdown for Edit Activity - Training Page - Only 3 options
+const getStatusDropdownQuery = (params) => {
     const query = `SELECT status_id , status_display  FROM status_master sm WHERE status IN ('not_started','in_progress','done');`;
     return executeQuery(query, params);
 }
-const getStatusQuery = () =>{
+const getStatusQuery = () => {
     const query = `SELECT status_id, status_display FROM status_master`
     return executeQuery(query);
 }
 
-module.exports = {getTrainee ,  getTraineeDetailsQuery ,  markAsReviewedQuery , getTraineesDetailsForStatusQuery ,  getStatusDropdownQuery , getStatusQuery};
+module.exports = {getTrainee, getTraineeDetailsQuery, markAsReviewedQuery, getTraineesDetailsForStatusQuery, getStatusDropdownQuery, getStatusQuery};

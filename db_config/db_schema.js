@@ -1,8 +1,8 @@
-const con  = require('../db_config/db_connection.js')
+const con = require('../db_config/db_connection')
 // var executeQuery = ()=>{}
 if (con) {
     const queries = [
-    	`CREATE TABLE IF NOT EXISTS users (
+      `CREATE TABLE IF NOT EXISTS users (
     	user_id INT NOT NULL AUTO_INCREMENT,
         user_name VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL,
@@ -111,13 +111,12 @@ if (con) {
         PRIMARY KEY (comment_id),
         FOREIGN KEY (training_plan_id) REFERENCES training_plan(training_plan_id),
         FOREIGN KEY (added_by) REFERENCES users (user_id)
-      );`,
-  	];
+      );`
+    ];
 
 	try {
 		con.query(queries.join(""), (error) => {
 			if (error) throw error;
-			// console.log("Schema created successfully");
 		});
 	} catch (error) {
 		if (error.code === "ER_BAD_DB_ERROR") {
@@ -126,14 +125,12 @@ if (con) {
 			console.error(error);
 		}
 	}
-	var executeQuery = (query,params = []) => {
+	var executeQuery = (query, params = []) => {
 		return new Promise((resolve, reject) => {
 			con.query(query, params, (error, result) => {
 			if (error) {
-				console.log("The error is-",error);
 				reject(error);
 			} else {
-				// console.log(result);
 				resolve(result);
 			}
 			});
@@ -141,5 +138,5 @@ if (con) {
 	};
 }
 
-// console.log(" 2. db schema file working properly");
-module.exports = {executeQuery , con};
+
+module.exports = {executeQuery, con};
