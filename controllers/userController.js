@@ -1,8 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const {executeQuery} = require('../db_config/db_schema');
+
 const { addUserQuery, userExists } = require("../models/userModel");
 const { CONFIG } = require('../utils/config');
+const {executeQuery} = require('../utils/exec_db_query');
 const {sendSuccessRes, sendFailRes} = require('../utils/responses');
 
 // 1 . add user API - Admin Page

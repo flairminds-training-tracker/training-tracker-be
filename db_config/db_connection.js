@@ -1,30 +1,25 @@
-// const CONFIG = require('../utils/config');
+const path = require('path');
+const mysql = require("mysql2");
+const CONFIG = require('../utils/config');
 
-// let dbCon = false
-// try {
-//   const mysql = require("mysql2");
-//   require('dotenv').config();
+require('dotenv').config({ path: path.resolve('../.env') });
 
-//   const con = mysql.createConnection({
-//     connectionLimit: 10,
-//     host: CONFIG.DB_HOST,
-//     user: CONFIG.DB_USER,
-//     password: CONFIG.DB_PASSWORD,
-//     database: CONFIG.DB_DATABASE,
-//     port: CONFIG.DB_PORT,
-//     multipleStatements: true
-//   });
+const dbCon = mysql.createConnection({
+  connectionLimit: 10,
+  host: CONFIG.DB_HOST,
+  user: CONFIG.DB_USER,
+  password: CONFIG.DB_PASSWORD,
+  database: CONFIG.DB_DATABASE,
+  port: CONFIG.DB_PORT,
+  multipleStatements: true
+});
 
-//   // Attempt to connect
-//   con.connect((err) => {
-//     if (err) {
-//       console.error('Error connecting to MySQL:', err);
-//       return;
-//     }
-//     console.info('Connected to MySQL');
-//   });
-//   dbCon = con;
-// } catch (error) {
-//   console.error('Error setting up MySQL connection:', error);
-// }
-// module.exports = dbCon;
+dbCon.connect((err) => {
+  if (err) {
+    console.error('Error connecting to MySQL:', err);
+    return;
+  }
+  console.info('Connected to MySQL');
+});
+
+module.exports = dbCon

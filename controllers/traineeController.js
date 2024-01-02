@@ -1,9 +1,9 @@
-const {executeQuery} = require('../db_config/db_schema');
 const {
     getTrainee, getTraineeDetailsQuery,
     markAsReviewedQuery, getTraineesDetailsForStatusQuery,
     getStatusDropdownQuery
 } = require('../models/traineeModel');
+const {executeQuery} = require('../utils/exec_db_query');
 const {sendSuccessRes, sendFailRes} = require('../utils/responses');
 
 // INFO: 5. Get Trainee & Trainer Dropdown - Admin Page
