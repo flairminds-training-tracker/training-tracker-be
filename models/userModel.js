@@ -1,4 +1,4 @@
-const {executeQuery} = require('../db_config/db_schema');
+const {executeQuery} = require('../utils/exec_db_query');
 
 // 1 . add user API - Admin Page
 const addUserQuery = (userName, email, password, isAdmin, createdAt) => {

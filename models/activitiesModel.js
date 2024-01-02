@@ -1,4 +1,4 @@
-const { executeQuery } = require("../db_config/db_schema");
+const { executeQuery } = require("../utils/exec_db_query");
 
 // 4 .Get Technology Dropdown - Admin Page
 const getTechnology = () => {

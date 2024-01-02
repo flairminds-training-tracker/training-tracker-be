@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config({ path: path.resolve('../.env') });
-const {executeQuery} = require('../db_config/db_schema');
+const {executeQuery} = require('../utils/db_queries');
 
-const DBFIXESDIR = '../dbFixes/';
+const DBFIXESDIR = './dbFixes/';
 
 // eslint-disable-next-line no-unused-vars
 function initializeDB() {
@@ -48,5 +48,5 @@ async function runDBFixes() {
 if (process.env.NODE_ENV == 'development') {
     // initializeDB();
     // initSeedData();
-    // runDBFixes();
+    runDBFixes();
 }

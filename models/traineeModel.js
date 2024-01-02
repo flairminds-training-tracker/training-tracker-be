@@ -1,4 +1,4 @@
-const {executeQuery} = require('../db_config/db_schema');
+const {executeQuery} = require('../utils/exec_db_query');
 
 // 5 . Get Trainee & Trainer Dropdown - Admin Page
 const getTrainee = () => {

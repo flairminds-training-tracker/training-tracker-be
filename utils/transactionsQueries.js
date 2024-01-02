@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-undef
-const {con} = require('../db_config/db_schema');
+const {con} = require('../config/db_connection');
 
 const beginTransaction = () => {
     return new Promise((resolve, reject) => {

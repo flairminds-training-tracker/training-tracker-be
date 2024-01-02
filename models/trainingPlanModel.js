@@ -1,4 +1,4 @@
-const { executeQuery } = require("../db_config/db_schema");
+const { executeQuery } = require("../utils/exec_db_query");
 
 const {beginTransaction, commitTransaction, rollbackTransaction} = require('../utils/transactionsQueries');
 

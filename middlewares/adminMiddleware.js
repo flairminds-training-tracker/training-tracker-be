@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-const { executeQuery } = require("../db_config/db_schema");
 const { CONFIG } = require('../utils/config');
+const { executeQuery } = require("../utils/exec_db_query");
 const { sendFailRes } = require('../utils/responses');
 
 const adminAuthMiddleware = async (req, res, next) => {
