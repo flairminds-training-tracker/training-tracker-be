@@ -1,12 +1,8 @@
-const dotenv = require("dotenv");
-dotenv.config();
-
+const CONFIG = require('./utils/config');
 const { createServer } = require('./utils/server');
-
-const port = process.env.PORT || 9090;
 
 const app = createServer();
 
-app.listen(port, () => {
-  console.info(`Server running on port ${port}`);
+app.listen(CONFIG.SERVER_PORT, () => {
+  console.info(`Server running on port ${CONFIG.SERVER_PORT}`);
 });

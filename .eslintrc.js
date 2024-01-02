@@ -74,5 +74,5 @@ module.exports = {
             }
         }]
     },
-    "ignorePatterns": ['rough']
+    "ignorePatterns": ['rough', '*.test.js']
 }

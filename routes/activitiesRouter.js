@@ -1,6 +1,6 @@
 const activitiesRouter = require("express").Router();
 
-const { getActivitiesByTechnologyCtrl , setStatusForEditActivityCtrl } =require('../controllers/activitiesController');
+const { getActivitiesByTechnologyCtrl, setStatusForEditActivityCtrl } = require('../controllers/activitiesController');
 const { adminAuthMiddleware } = require("../middlewares/adminMiddleware");
 const {userAuthMiddleware} = require('../middlewares/userMiddleware')
 

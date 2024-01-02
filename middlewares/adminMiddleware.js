@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { executeQuery } = require("../db_config/db_schema");
-const {sendFailRes} = require('../utils/responses');
+const { CONFIG } = require('../utils/config');
+const { sendFailRes } = require('../utils/responses');
 
 const adminAuthMiddleware = async (req, res, next) => {
     const { authorization } = req.headers;
@@ -11,7 +12,7 @@ const adminAuthMiddleware = async (req, res, next) => {
     const token = authorization.split(' ')[1];
 
     try {
-        const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        const decodedToken = jwt.verify(token, CONFIG.JWT_SECRET_KEY);
         const email = decodedToken.email;
 
         const selectQuery = `SELECT * FROM users WHERE is_admin = 1 AND email = ? `;
