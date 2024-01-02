@@ -1,8 +1,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
 const {executeQuery} = require('../db_config/db_schema');
 const { addUserQuery, userExists } = require("../models/userModel");
+const { CONFIG } = require('../utils/config');
 const {sendSuccessRes, sendFailRes} = require('../utils/responses');
 
 // 1 . add user API - Admin Page
@@ -27,7 +27,7 @@ const addUser = async (req, res) => {
             return sendFailRes(res, { message: "Something wrong in your code" }, 400);
             // return res.status(400).json({ error: "Something wrong in your code" });
         }
-        const token = jwt.sign({ email: email }, process.env.JWT_SECRET_KEY, {
+        const token = jwt.sign({ email: email }, CONFIG.JWT_SECRET_KEY, {
             expiresIn: "5d"
         });
         return sendSuccessRes(res, {result: `User created successfully with email - ${email} and has ${token}`});
@@ -52,7 +52,7 @@ const userLogin = async (req, res) => {
             const isMatch = await bcrypt.compare(password, result[0].password);
             if (result[0].email === email && isMatch) {
                 const userId = result[0].user_id;
-                const token = jwt.sign({ email: email, userId: userId }, process.env.JWT_SECRET_KEY, {
+                const token = jwt.sign({ email: email, userId: userId }, CONFIG.JWT_SECRET_KEY, {
                     expiresIn: "5d"
                 })
                 res.cookie('access_token', token);
