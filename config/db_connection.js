@@ -22,4 +22,4 @@ dbCon.connect((err) => {
   console.info('Connected to MySQL');
 });
 
-module.exports = dbCon
+module.exports = {con: dbCon}

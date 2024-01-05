@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const { createLogger, transports, format } = require('winston');
-
-const dirPath = path.join('__dirname');
+require('winston-daily-rotate-file');
+const dirPath = path.join('__dirname', '../logs');
 
 if (!fs.existsSync(dirPath)) {
   fs.mkdirSync(dirPath);
@@ -13,17 +13,15 @@ const errorLogger = createLogger({
   format: format.combine(
     format.timestamp({
       format: () => {
-        const now = new Date();
-        const date = now.toLocaleDateString();
-        const time = now.toLocaleTimeString();
-        return `date is ${date}, Time is ${time} `;
+        const now = new Date().toISOString();
+        return `${now}`
       }
     }),
     format.errors({ stack: true }),
-    format.printf(info => `${info.timestamp} -- ${info.level}: ${info.message}\nAdditional Information:\n${JSON.stringify(info, null, 2)}\n\n`)
+    format.printf(info => `${info.timestamp} -- ${info.level}: ${info.api} -  ${info.statusCode}  -  ${JSON.stringify(info.message)}\n`)
   ),
   transports: [
-    new transports.File({ filename: `${dirPath}/errorLogger.log`, level: 'error' })
+    new transports.DailyRotateFile({ filename: `${dirPath}/errorLogger-%DATE%.log`, datePattern: "YYYY-MM-DD", maxFiles: '14d', level: 'error' })
   ]
 });
 
@@ -31,12 +29,15 @@ const infoLogger = createLogger({
   level: 'info',
   format: format.combine(
     format.timestamp({
-      format: () => {}
+      format: () => {
+        const now = new Date().toISOString();
+        return `${now}`
+      }
     }),
-    format.printf(info => `${info.timestamp} ${info.ipaddress}: ${JSON.stringify(info.message)}\n`)
+    format.printf(info => `${info.timestamp} -- ${info.level}: ${info.api} -  ${info.statusCode}  -  ${JSON.stringify(info.message)}\n`)
   ),
   transports: [
-    new transports.File({ filename: `${dirPath}/infoLogger.log`, level: 'info' })
+    new transports.DailyRotateFile({ filename: `${dirPath}/infoLogger-%DATE%.log`, datePattern: "YYYY-MM-DD", maxFiles: '14d', level: 'info' })
   ]
 });
 
