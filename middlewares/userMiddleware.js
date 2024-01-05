@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { CONFIG } = require('../utils/config');
+const CONFIG = require('../utils/config');
 const { executeQuery } = require("../utils/exec_db_query");
 const {sendFailRes} = require('../utils/responses');
 

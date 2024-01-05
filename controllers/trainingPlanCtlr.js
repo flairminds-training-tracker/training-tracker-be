@@ -8,7 +8,7 @@ const saveTpCtrl = async(req, res) => {
         if (!results.error) {
             console.info(results);
             if (results.isDuplicate) {
-                return sendFailRes(res, {message: results}, 400);
+                return sendFailRes(res, {message: results}, 400, 'saveTpCtrl-saveTpModel-isDuplicate');
             }
             return sendSuccessRes(res, {result: {results}});
         }

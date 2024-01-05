@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const { addUserQuery, userExists } = require("../models/userModel");
-const { CONFIG } = require('../utils/config');
+const CONFIG = require('../utils/config');
 const {executeQuery} = require('../utils/exec_db_query');
 const {sendSuccessRes, sendFailRes} = require('../utils/responses');
 
@@ -45,10 +45,10 @@ const userLogin = async (req, res) => {
         const { email, password } = req.body;
         if (email && password) {
             const selectQuery = `SELECT * FROM users WHERE email = ?`;
-            const result = await executeQuery(selectQuery, email);
+            const result = await executeQuery(selectQuery, [email]);
             if (result.length == 0) {
                 // return res.status(400).json({error: `You're not registered yet. Please first sign up and you'll be able to log in.`, });
-                return sendFailRes(res, { message: "You're not registered yet. Please first sign up and you'll be able to log in." } );
+                return sendFailRes(res, { message: "You're not registered yet. Please sign up." } );
             }
             const isMatch = await bcrypt.compare(password, result[0].password);
             if (result[0].email === email && isMatch) {
