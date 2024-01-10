@@ -14,7 +14,8 @@ const CONFIG = {
     AWS_REGION: process.env.REGION,
     BUCKET: process.env.BUCKET,
     S3_BUCKET_LINK: process.env.S3_BUCKET_LINK,
-    S3_PATH: process.env.S3_PATH
+    S3_PATH: process.env.S3_PATH,
+    NODE_ENV: process.env.NODE_ENV
 }
 
 module.exports = CONFIG

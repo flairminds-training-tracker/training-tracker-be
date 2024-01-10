@@ -27,7 +27,6 @@ async function addLogFiles() {
 }
 
 
-// eslint-disable-next-line no-unused-vars
 async function getLogFiles() {
     try {
         const getObjectsListcommand = new ListObjectsCommand({
@@ -36,8 +35,6 @@ async function getLogFiles() {
         });
         const objectListResponse = await s3Client.send(getObjectsListcommand);
         const objectList = objectListResponse.Contents;
-        // eslint-disable-next-line prefer-const
-        let data;
         for (const object of objectList) {
             const getObjectCommand = new GetObjectCommand({
                 Bucket: CONFIG.BUCKET,
@@ -46,11 +43,11 @@ async function getLogFiles() {
             const response = await s3Client.send(getObjectCommand);
             response.Body.transformToString().then(d => console.info(d)).catch(err => console.error(err))
         }
-        return data;
+        return {success: true};
     } catch (error) {
         console.error(error);
-        return {};
+        return { success: false, error: JSON.stringify(error) };
     }
 }
 
-module.exports = { addLogFiles }
+module.exports = { addLogFiles, getLogFiles }
