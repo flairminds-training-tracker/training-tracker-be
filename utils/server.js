@@ -1,6 +1,7 @@
 const express = require("express");
-
+const morganMiddleware = require('../middlewares/morgan.middleware');
 const { routesMap } = require('../routes');
+
 
 function createServer() {
     const app = express();
@@ -8,6 +9,7 @@ function createServer() {
 
     app.use(cors({origin: true, credentials: true}));
     app.use(express.json());
+    app.use(morganMiddleware);
 
     Object.keys(routesMap).forEach((key) => app.use(key, routesMap[key]))
 
