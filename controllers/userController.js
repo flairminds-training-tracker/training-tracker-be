@@ -5,6 +5,7 @@ const { addUserQuery, userExists } = require("../models/userModel");
 const CONFIG = require('../utils/config');
 const {executeQuery} = require('../utils/exec_db_query');
 const {sendSuccessRes, sendFailRes} = require('../utils/responses');
+const {getTokens} = require('./authController');
 
 // 1 . add user API - Admin Page
 const addUser = async (req, res) => {
@@ -52,12 +53,10 @@ const userLogin = async (req, res) => {
             }
             const isMatch = await bcrypt.compare(password, result[0].password);
             if (result[0].email === email && isMatch) {
-                const userId = result[0].user_id;
-                const token = jwt.sign({ email: email, userId: userId }, CONFIG.JWT_SECRET_KEY, {
-                    expiresIn: "5d"
-                })
+                const user = result[0];
+                const {token, refreshToken} = getTokens(user);
                 res.cookie('access_token', token);
-                return sendSuccessRes(res, {result: {"token": token, "success": true, "user_id": userId, "is_admin": result[0].is_admin}});
+                return sendSuccessRes(res, {result: {"token": token, "refreshToken": refreshToken, "success": true, "user_id": user.user_id, "is_admin": result[0].is_admin}});
                 } else {
                     return sendFailRes(res, { message: "Invalid email or password..." } );
                 }
