@@ -4,7 +4,8 @@ const routesMap = {
     "/acti": require('./activitiesRouter')['activitiesRouter'],
     "/trainee": require('./traineeRouter')['traineeRouter'],
     "/trainingPlan": require('./trainingPlanRouter')['trainingPlanRouter'],
-    "/logScheduler": require('./logSchedulerRouter')['logSchedulerRouter']
+    "/logScheduler": require('./logSchedulerRouter')['logSchedulerRouter'],
+    "/refreshToken": require('./authRouter')['refreshTokenRouter']
 }
 
 module.exports = { routesMap }

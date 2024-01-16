@@ -9,6 +9,7 @@ const CONFIG = {
     DB_DATABASE: process.env.DATABASE,
     DB_PORT: process.env.DATABASE_PORT,
     JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
+    RERFRESH_JWT_SECRET_KEY: process.env.RERFRESH_JWT_SECRET_KEY,
     ACCESS_KEY_ID: process.env.ACCESS_KEY_ID,
     SECRET_ACCESS_KEY: process.env.SECRET_ACCESS_KEY,
     AWS_REGION: process.env.REGION,
