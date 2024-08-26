@@ -199,7 +199,6 @@ const editTopicCtrl = async (req, res) => {
         let articleUrl = null;
         let practiceUrl = null;
 
-        // Upload article if present
         if (article && article[0]) {
             const articlePath = article[0].path;
             const articleBlobName = article[0].filename;
@@ -213,7 +212,6 @@ const editTopicCtrl = async (req, res) => {
             articleUrl = req.body.article;
         }
 
-        // Upload practice if present
         if (practice && practice[0]) { 
             const practicePath = practice[0].path;
             const practiceBlobName = practice[0].filename;
